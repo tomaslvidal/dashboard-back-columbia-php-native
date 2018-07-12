@@ -1,33 +1,34 @@
 <?php
-include("/www/docs/eflyco.com/db_settings.incEFLY.php");
-connect_db();
-
 global $res;
 global $tot;
 global $row;
 global $connect;
 
 function connect_db(){
-	global $host;
-	global $db;
-	global $user;
-	global $pass;
+
+	global $dir_web_services;
 	global $connect;
 
-	$connect=new mysqli($host, $user, $pass,$db);
+	$db="columbiaTest";
+	$user="adminaptek";
+	$pass="Tekap97db_new";
+	$server="200.68.105.145";
+
+	$connect=new mysqli($server, $user, $pass,$db);
 	if($connect->connect_errno) {handle_error("Fallo conectar a MySQL (".$connect->connect_errno.") ".$connect->connect_error);}
 
 	$connect->set_charset('utf8');
 
 }
 
-/*Función para hacer consultas*/
+/*Funci�n para hacer consultas*/
 function db_query($i,$param){
 	if($i==0){$i='';}
 	global ${'tot'.$i};
 	global ${'res'.$i};
 	global $connect;
 	global ${'row'.$i};
+	global $data;
 
 	${'res'.$i}=$connect->query($param);
 
@@ -38,10 +39,14 @@ function db_query($i,$param){
 	if (${'tot'.$i}>0){
 		${'nres'.$i}=${'res'.$i}->data_seek(0);
 		${'row'.$i}=${'res'.$i}->fetch_assoc();
+
+		while (${'rowx'.$i} = ${'res'.$i}->fetch_assoc()){
+	  	$data[] = ${'rowx'.$i};
+		}
 	}
 }
 
-/*Función para hacer updates*/
+/*Funci�n para hacer updates*/
 function db_update($param){
 	global $tot;
 	global $connect;
@@ -50,7 +55,7 @@ function db_update($param){
 	if(!$res) {handle_error($connect->error);}else{$tot=1;}
 }
 
-/*Función para insertar un nuevo registro*/
+/*Funci�n para insertar un nuevo registro*/
 function db_insert($param){
 	global $tot;
 	global $newid;
@@ -61,7 +66,7 @@ function db_insert($param){
 	if(!$res) {handle_error($connect->error);}
 }
 
-/*Función para borrar dato/s*/
+/*Funci�n para borrar dato/s*/
 function db_delete($param){
 	global $tot;
 	global $connect;
@@ -90,5 +95,14 @@ function cleanVar($param){
 function handle_error($perror){
 	//mail("nbellosi@aptek.com.ar","Error en DB","Ocurrio el error: ".$perror,"");
 	die("<b>Database Error:</b> ".$perror);
+}
+
+
+function vacioGuion($valor){
+	if(trim($valor)==''){
+		return ' - ';
+	}else{
+		return $valor;
+	}
 }
 ?>
