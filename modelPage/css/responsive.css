@@ -1,0 +1,10 @@
+@media (min-width: 0px) and (max-width: 767px) {
+	.rowOneFile{
+		order: 2
+	}
+
+	.rowTwoFile{
+		order: 1;
+    justify-content: flex-start!important;
+	}
+}
