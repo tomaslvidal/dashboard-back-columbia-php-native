@@ -14,7 +14,7 @@ function verifyPost($value, $withTilde = "no")
       $returnx = onlyTwoValues('user', 'adm', $value);
     }
     // elseif($value=="image"){
-    //   $returnx = "/columbia/uploads/images/".$_POST[$value];
+    //   $returnx = "/columbiaAPP/uploads/images/".$_POST[$value];
     // }
     elseif($value=="typeTaxAir")
     {
@@ -95,7 +95,7 @@ function uploadFileBase64($imgForm, $where, $id = "")
 {
   if(!empty($imgForm)){
 
-    $dirImages = $_SERVER["DOCUMENT_ROOT"]."/columbia/"."uploads/images/";
+    $dirImages = $_SERVER["DOCUMENT_ROOT"]."/columbiaAPP/"."uploads/images/";
 
     $img = $imgForm;
 

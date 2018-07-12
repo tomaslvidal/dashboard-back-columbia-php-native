@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 
 ini_set('display_errors', '1');
 
-include($_SERVER["DOCUMENT_ROOT"]."/columbia/settings/generalPanel.php");
+include($_SERVER["DOCUMENT_ROOT"]."/columbiaAPP/settings/generalPanel.php");
 
 include("{$dir}modelPage/inc/breadcrumb.php");
 
@@ -29,7 +29,7 @@ function returnValue($column){
   {
     if($column == "image")
     {
-      $return = "/columbia/uploads/images/".$row2[$column];
+      $return = "/columbiaAPP/uploads/images/".$row2[$column];
     }
     else{
       $return = $row2[$column];

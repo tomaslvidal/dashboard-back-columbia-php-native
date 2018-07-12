@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 
 ini_set('display_errors', '1');
 
-include($_SERVER["DOCUMENT_ROOT"]."/columbia/settings/generalPanel.php");
+include($_SERVER["DOCUMENT_ROOT"]."/columbiaAPP/settings/generalPanel.php");
 
 include("{$dir}modelPage/inc/breadcrumb.php");
 

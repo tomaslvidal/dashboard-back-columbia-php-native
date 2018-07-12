@@ -1,5 +1,5 @@
 <?
-include($_SERVER["DOCUMENT_ROOT"]."/columbia/settings/dirsGlobal.php");
+include($_SERVER["DOCUMENT_ROOT"]."/columbiaAPP/settings/dirsGlobal.php");
 
 include("{$dir}settings/db.inc.php");
 
