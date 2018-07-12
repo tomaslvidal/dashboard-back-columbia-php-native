@@ -7,14 +7,18 @@ include($_SERVER["DOCUMENT_ROOT"]."/columbiaAPP/admin/settings/generalPanel.php"
 
 include("{$dir}settings/functions.php");
 
-// var_dump("TESTx1");die();
 $table = verifyPost('where');
+
 if(!empty($table))
 {
   $user = verifyPost('user');
+
   $panel = verifyPost('panel');
+
   $idCompany = verifyPost('idCompany');
+
   $action = verifyPost('action');
+
   $id = verifyPost('id');
 
   if($table=='users'){
@@ -35,7 +39,7 @@ if(!empty($table))
         if($tot1==0)
         {
           $query = textQuery($columns);
-          // var_dump("INSERT {$table} ".$query);die()
+
           db_insert("INSERT {$table}".$query);
 
           $email = verifyPost('email');
@@ -53,26 +57,9 @@ if(!empty($table))
 
             $headers .= 'From: Columbia <welcome@columbia.com.ar>' . "\r\n";
 
-            // if($email_copia_oculta<>'')
-            // {
-            // 	$headers .= 'Bcc: soporte@aptek.com.ar,'.$email_copia_oculta.' ' . "\r\n";
-            // }
-            // else
-            // {
-            	$headers .= 'Bcc: soporte@aptek.com.ar' . "\r\n";
-            // }
-
-            // $headers .= 'Reply-To: '.$emailReserva. "\r\n" ;
-
-            // Mensaje
+          	$headers .= 'Bcc: soporte@aptek.com.ar' . "\r\n";
 
             $message = "";
-
-            // $message .= "<hr><br><font class='bodyFont'><b>Has sido autorizado para acceder a nuestro Sitio</b></font><br>";
-            //
-            // $message .= "<font class='bodyFont'>"."ddddddddd"."</font>";
-            //
-            // $message.="<br><br><font class='bodyFont'>"."dddddd"."</font>";
 
             ob_start();
 
@@ -124,7 +111,7 @@ if(!empty($table))
         if($tot4==0)
         {
           $query = textQuery($columns);
-          // var_dump("UPDATE {$table}".$query."where id={$id}");die();
+
           db_update("UPDATE {$table}".$query."where id={$id}");
 
           $_SESSION['alert'] = array(
@@ -162,9 +149,11 @@ if(!empty($table))
       uploadFileBase64($imgForm, $table, $id);
 
       $columns = "name, typeTaxAir, taxAir, markupHotel, dk, fechaModificacion".(!empty($imgForm) ? ", image" : "");
+
       $query = textQuery($columns);
-      // var_dump($query);die();
+
       db_insert("INSERT {$table} ".$query);
+
       header("Location: {$dir_}{$table}/list.php");
     }
     else
@@ -174,15 +163,16 @@ if(!empty($table))
       uploadFileBase64($imgForm, $table, $id);
 
       $columns = "name, typeTaxAir, taxAir, markupHotel, dk, fechaModificacion".(!empty($imgForm) ? ", image" : "");
+
       $query = textQuery($columns);
-      // var_dump($query);die();
+
       db_update("UPDATE {$table}".$query."where id={$id}");
+
       header("Location: {$dir_}{$table}/add.php?id={$id}");
     }
   }
   elseif($table=='packages')
   {
-
     if(empty($action))
     {
       $imgForm = verifyPost('image');
@@ -190,9 +180,11 @@ if(!empty($table))
       uploadFileBase64($imgForm, $table, $id);
 
       $columns = "category, subCategory, since, until, title, subtitle, price, description, iconFor, checkSlider, checkHome, fechaModificacion".(!empty($imgForm) ? ", image" : "");
+
       $query = textQuery($columns);
-      // var_dump($query);die();
+
       db_insert("INSERT {$table} ".$query);
+
       header("Location: {$dir_}{$table}/list.php");
     }
     else
@@ -204,8 +196,9 @@ if(!empty($table))
       $columns = "category, subCategory, since, until, title, subtitle, price, description, iconFor, checkSlider, checkHome, fechaModificacion".(!empty($imgForm) ? ", image" : "");
 
       $query = textQuery($columns);
-      // var_dump($query);die();
+
       db_update("UPDATE {$table}".$query."where id={$id}");
+
       header("Location: {$dir_}{$table}/add.php?id={$id}");
     }
   }
