@@ -18,93 +18,56 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 
-<script>
-function popoverConfirmation()
-{
-  $('[data-toggle=confirmation]').confirmation({
-    rootSelector: '[data-toggle=confirmation]',
-    onConfirm: function(){
-      let id = $(this)[0].getAttribute('data-id');
-      deleteQuick(id);
-    }
-  });
-
-  dataTableEdit();
-}
-
-function optionsSubCat(val = "", subCategory = ""){
-  let url = <?="'".$dir_.'packages/query.php'."';"?>
-  let id_ = val, html = "", dataAjax={};
-
-  if( (id_.toString()).length>0 )
+  <script>
+  function popoverConfirmation()
   {
-    dataAjax = {
-      "init" : "success",
-      "id" : id_
-    };
-  }
-  else
-  {
-    dataAjax = {
-      "init" : "success"
-    };
+    $('[data-toggle=confirmation]').confirmation({
+      rootSelector: '[data-toggle=confirmation]',
+      onConfirm: function(){
+        let id = $(this)[0].getAttribute('data-id');
+        deleteQuick(id);
+      }
+    });
+
+    dataTableEdit();
   }
 
-  //
-  $.ajax({
-    method: "POST",
-    url: url,
-    dataType: "json",
-    data: dataAjax
-  })
-  .done(function(result)
-  {
-    let data = result.data
-    // html+="<select class='form-control' name='idSubcat' id='idSubcat'>";
-    for (var i = 0; i < data.length; i++)
+  function optionsSubCat(val = "", subCategory = ""){
+    let url = <?="'".$dir_.'packages/query.php'."';"?>
+    
+    let id_ = val, html = "", dataAjax={};
+
+    if( (id_.toString()).length>0 )
     {
-      html+=`<option value="${data[i].id}"`+( (subCategory.length>0 && subCategory==data[i].id) ? 'selected' : '')+`>${data[i].name}</option>`;
+      dataAjax = {
+        "init" : "success",
+        "id" : id_
+      };
     }
-    // html+="</select>";
-    $('#idSubcat').html(html);
-  })
-  .fail(function() {
-  })
-  .always(function() {
-  });
-}
+    else
+    {
+      dataAjax = {
+        "init" : "success"
+      };
+    }
 
-function deleteQuick(id = "")
-{
-  let view = $('#view').val();
-
-  let url = <?="'".$dir_.'deleteQuick.php'."';"?>
-
-  if((view=="users" || view=="companies" || view=="packages" || view=="subCategorias" || view=="categorias") && id!="")
-  {
+    //
     $.ajax({
       method: "POST",
       url: url,
       dataType: "json",
-      data: { id: id, view: view }
+      data: dataAjax
     })
-    .done(function(result) {
-      let data = result.success;
-
-      if(data == true)
+    .done(function(result)
+    {
+      let data = result.data
+      // html+="<select class='form-control' name='idSubcat' id='idSubcat'>";
+      for (var i = 0; i < data.length; i++)
       {
-        let dataTable = $('.dataTable').DataTable();
-
-        let trRow = "#row"+id;
-
-        let row = dataTable.row( $(trRow) );
-
-        row.remove();
-
-        $(trRow).remove();
+        html+=`<option value="${data[i].id}"`+( (subCategory.length>0 && subCategory==data[i].id) ? 'selected' : '')+`>${data[i].name}</option>`;
       }
-      else if(data == false){
-      }
+      // html+="</select>";
+      $('#idSubcat').html(html);
     })
     .fail(function() {
     })
@@ -112,481 +75,519 @@ function deleteQuick(id = "")
     });
   }
 
-}
-
-// function editTDHTML(field, name, options="")
-// {
-//   let html = "";
-//
-//   if(field=="name")
-//   {
-//     html +='<td data-field="'+field+'" class="tabledit-view-mode" style="cursor: pointer;">';
-//       html +='<span class="tabledit-span">'+name+'</span>';
-//       html +='<input class="tabledit-input form-control input-sm" type="text" name="name" value="'+name+'" style="display: none;" disabled="">';
-//     html +='</td>'
-//   }
-//   else if(field="category")
-//   {
-//     options = options[1][2];
-//
-//     let optionsinJSON = JSON.parse(options)
-//
-//     html +='<td data-field="category" class="tabledit-view-mode" style="cursor: pointer;">'
-//     html +='  <span class="tabledit-span">'+optionsinJSON[name]+'</span>'
-//     html +='  <select class="tabledit-input form-control input-sm" name="category" style="display: none;" disabled="">'
-//               for (var i = 0; i < Object.keys(optionsinJSON).length; i++)
-//               {
-//                 html +='<option value="'+Object.keys(optionsinJSON)[i]+'"'+(Object.keys(optionsinJSON)[i]==name ? 'selected' : '')+'>'+optionsinJSON[Object.keys(optionsinJSON)[i].toString()]+'</option>';
-//               }
-//     html +='  </select>'
-//     html +='</td>'
-//   }
-//
-//   return html;
-// }
-
-function editTDHTML(field, name, value, type, options="", getEtiquette="")
-{
-  let html = "";
-
-  if(getEtiquette.length==0)
+  function deleteQuick(id = "")
   {
-    let attributesTD = {};
-  }
+    let view = $('#view').val();
 
-  if(type=="input" || type=="identifier")
-  {
-    let TDClass = type=="input" ? 'tabledit-view-mode' : 'sorting_1';;
+    let url = <?="'".$dir_.'deleteQuick.php'."';"?>
 
-    let TDStyle = type=="input" ? 'cursor: pointer' : '';
-
-    let classSpan = type=="input" ? 'tabledit-span' : 'tabledit-span tabledit-identifier';
-
-    let classInput = type=="input" ? 'tabledit-input form-control input-sm' : 'tabledit-input tabledit-identifier';
-
-    let typeInput = type=="input" ? 'text' : 'hidden';
-
-    let styleInput = type=="input" ? 'display: none;' : '';
-
-      if(getEtiquette.length==0)
-      {
-        attributesTD = type=="input" ? {"data-field":field, "class":"tabledit-view-mode", "style":"cursor: pointer"} : {"data-field":field,"class":"sorting_1"};
-      }
-      else{
-        html +='<td data-field="'+field+'" class="'+TDClass+'" style="'+TDStyle+'">'
-      }
-          html +='<span class="'+classSpan+'">'+name+'</span>';
-          html +='<input class="'+classInput+'" type="'+typeInput+'" name="'+field+'" value="'+name+'" style="'+styleInput+'" disabled="">';
-      if(getEtiquette.length>0){
-        html +='</td>'
-      }
-  }
-  else if(type=="select")
-  {
-    options = options;
-
-    if(getEtiquette.length==0)
+    if((view=="users" || view=="companies" || view=="packages" || view=="subCategorias" || view=="categorias") && id!="")
     {
-      attributesTD = {"data-field":field,"class":"tabledit-view-mode","style":"cursor: pointer"}
-    }
-    else
-    {
-      html +='<td data-field="'+field+'" class="tabledit-view-mode" style="cursor: pointer;">'
-    }
-
-    html +='  <span class="tabledit-span">'+name+'</span>'
-    html +='  <select class="tabledit-input form-control input-sm" name="'+field+'" style="display: none;" disabled="">'
-              for (var i = 0; i < options.length; i++)
-              {
-                html +='<option value="'+options[i].value+'"'+(options[i].value==value ? 'selected' : '')+'>'+options[i].name+'</option>';
-              }
-    html +='  </select>'
-
-    if(getEtiquette.length>0)
-    {
-      html +='</td>'
-    }
-  }
-
-  if(getEtiquette.length==0)
-  {
-    let parts = []
-
-    parts[0] = html;
-
-    parts[1] = attributesTD;
-
-    return parts;
-  }
-  else
-  {
-    return html;
-  }
-}
-
-function PreviewImage() {
-        var oFReader = new FileReader();
-        oFReader.readAsDataURL(document.getElementById("logoFile").files[0]);
-
-        oFReader.onload = function (oFREvent) {
-            document.getElementById("logoImage").src = oFREvent.target.result;
-        };
-}
-
-function dataTableEditPART2(result = ""){
-  let arrayJSON = {}, statusInitEdit = $("#statusInit").val(), arrayEditable = [];
-
-  if(result.length!=0)
-  {
-    result = result.data;
-
-    for (var i = 0; i < result.length; i++) {
-      arrayJSON[(result[i].id)] = result[i].name;
-    }
-  }
-
-  // if(statusInitEdit=="false")
-  // {
-    arrayEditable = result.length==0 ? [[1, 'category']] : [[1, 'subCategory'],[2, 'category', JSON.stringify(arrayJSON)]];
-
-    // $("#statusInit").val("true");
-
-    $('.dataTable').Tabledit({
-      url: 'edit.php',
-      rowIdentifier: 'id',
-      editButton: false,
-      deleteButton: false,
-      hideIdentifier: false,
-      autoFocus: false,
-      columns: {
-          identifier: [0, 'id'],
-          editable: arrayEditable
-      },
-      onSuccess: function(data){
-        let id = data.id;
-
-        delete data['id'];
-        delete data['success'];
-
-        data = data.data;
-
-        let dataTable = $('.dataTable').DataTable(), trRow = "#row"+id, dataKeys = Object.keys(data), dataPosition;
-
-        for (var i = 0; i < dataKeys.length; i++)
-        {
-          dataPosition = data[dataKeys[i]];
-
-          let options = dataPosition.options == undefined ? '' : dataPosition.options;
-
-          // let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options, 'getEtiquette');
-          let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options);
-
-          let tdEdit = $(trRow).children("td[data-field='"+dataKeys[i]+"']");
-
-          // dataTable.cell( tdEdit ).data(addTD);
-          dataTable.cell( tdEdit ).data(dataPosition.name);
-
-          tdEdit.html(addTD);
-        }
-      }
-    });
-  // }
-}
-
-function dataTableEdit(){
-  let where = $('#view').val();
-
-  if(where=="categorias" || where=="subCategorias")
-  {
-    if(where=="subCategorias")
-    {
-      let url = <?="'".$dir_.'subcategories/query.php'."';"?>
-      //
       $.ajax({
         method: "POST",
         url: url,
         dataType: "json",
-        data: { init: "success" }
+        data: { id: id, view: view }
       })
-      .done(function(result)
-      {
-        dataTableEditPART2(result);
+      .done(function(result) {
+        let data = result.success;
+
+        if(data == true)
+        {
+          let dataTable = $('.dataTable').DataTable();
+
+          let trRow = "#row"+id;
+
+          let row = dataTable.row( $(trRow) );
+
+          row.remove();
+
+          $(trRow).remove();
+        }
+        else if(data == false){
+        }
       })
       .fail(function() {
       })
       .always(function() {
       });
-    }
-    else if(where=="categorias")
-    {
-      dataTableEditPART2();
     }
 
   }
-}
 
-$(document).ready(function(){
-  popoverConfirmation();
+  // function editTDHTML(field, name, options="")
+  // {
+  //   let html = "";
+  //
+  //   if(field=="name")
+  //   {
+  //     html +='<td data-field="'+field+'" class="tabledit-view-mode" style="cursor: pointer;">';
+  //       html +='<span class="tabledit-span">'+name+'</span>';
+  //       html +='<input class="tabledit-input form-control input-sm" type="text" name="name" value="'+name+'" style="display: none;" disabled="">';
+  //     html +='</td>'
+  //   }
+  //   else if(field="category")
+  //   {
+  //     options = options[1][2];
+  //
+  //     let optionsinJSON = JSON.parse(options)
+  //
+  //     html +='<td data-field="category" class="tabledit-view-mode" style="cursor: pointer;">'
+  //     html +='  <span class="tabledit-span">'+optionsinJSON[name]+'</span>'
+  //     html +='  <select class="tabledit-input form-control input-sm" name="category" style="display: none;" disabled="">'
+  //               for (var i = 0; i < Object.keys(optionsinJSON).length; i++)
+  //               {
+  //                 html +='<option value="'+Object.keys(optionsinJSON)[i]+'"'+(Object.keys(optionsinJSON)[i]==name ? 'selected' : '')+'>'+optionsinJSON[Object.keys(optionsinJSON)[i].toString()]+'</option>';
+  //               }
+  //     html +='  </select>'
+  //     html +='</td>'
+  //   }
+  //
+  //   return html;
+  // }
 
-  let optionsDatePicker = {
-    dateFormat: 'dd/mm/yy',
-  	autoHide : 'true',
-    };
+  function editTDHTML(field, name, value, type, options="", getEtiquette="")
+  {
+    let html = "";
 
-  $('#since, #until').datepicker(optionsDatePicker);
-
-  $('#addItem').on('click', function(){
-    let form = $(".formValidate")
-    let where = $("#view").val();
-
-    if(where=="subCategorias"){
-      where = "subcategories";
-    }
-    else if(where=="categorias"){
-      where = "categories";
-    }
-
-    if (form[0].checkValidity() === false)
+    if(getEtiquette.length==0)
     {
-      event.preventDefault()
-      event.stopPropagation()
+      let attributesTD = {};
+    }
 
-      form.addClass('was-validated');
+    if(type=="input" || type=="identifier")
+    {
+      let TDClass = type=="input" ? 'tabledit-view-mode' : 'sorting_1';;
+
+      let TDStyle = type=="input" ? 'cursor: pointer' : '';
+
+      let classSpan = type=="input" ? 'tabledit-span' : 'tabledit-span tabledit-identifier';
+
+      let classInput = type=="input" ? 'tabledit-input form-control input-sm' : 'tabledit-input tabledit-identifier';
+
+      let typeInput = type=="input" ? 'text' : 'hidden';
+
+      let styleInput = type=="input" ? 'display: none;' : '';
+
+        if(getEtiquette.length==0)
+        {
+          attributesTD = type=="input" ? {"data-field":field, "class":"tabledit-view-mode", "style":"cursor: pointer"} : {"data-field":field,"class":"sorting_1"};
+        }
+        else{
+          html +='<td data-field="'+field+'" class="'+TDClass+'" style="'+TDStyle+'">'
+        }
+            html +='<span class="'+classSpan+'">'+name+'</span>';
+            html +='<input class="'+classInput+'" type="'+typeInput+'" name="'+field+'" value="'+name+'" style="'+styleInput+'" disabled="">';
+        if(getEtiquette.length>0){
+          html +='</td>'
+        }
+    }
+    else if(type=="select")
+    {
+      options = options;
+
+      if(getEtiquette.length==0)
+      {
+        attributesTD = {"data-field":field,"class":"tabledit-view-mode","style":"cursor: pointer"}
+      }
+      else
+      {
+        html +='<td data-field="'+field+'" class="tabledit-view-mode" style="cursor: pointer;">'
+      }
+
+      html +='  <span class="tabledit-span">'+name+'</span>'
+      html +='  <select class="tabledit-input form-control input-sm" name="'+field+'" style="display: none;" disabled="">'
+                for (var i = 0; i < options.length; i++)
+                {
+                  html +='<option value="'+options[i].value+'"'+(options[i].value==value ? 'selected' : '')+'>'+options[i].name+'</option>';
+                }
+      html +='  </select>'
+
+      if(getEtiquette.length>0)
+      {
+        html +='</td>'
+      }
+    }
+
+    if(getEtiquette.length==0)
+    {
+      let parts = []
+
+      parts[0] = html;
+
+      parts[1] = attributesTD;
+
+      return parts;
     }
     else
     {
-      let data_= {}, name_ = $("input[name='name_']").val(), category_ = $("select[name='category_']").val();
-
-      $("#iconLoading").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
-      $("#iconLoading").attr("style", "display: flex!important;");
-
-      if(where=="categories")
-      {
-        data_ = { category: name_ };
-      }
-      else if (where=="subcategories")
-      {
-        data_ = { subCategory: name_, category: category_ };
-      }
-
-      $.ajax({
-        method: "POST",
-        url: "<?=$dir_?>"+where+"/add.php",
-        dataType: "json",
-        data: data_
-      })
-      .done(function(result) {
-
-        if(result.success == true)
-        {
-          let data = result.data, html = '<i class="fa fa-check" aria-hidden="true" style="color: #16a085"></i>', tdLast = "";
-
-          tdLast+= '<div class="nonec" id="i-'+(data.id.value)+'"></div>'
-
-          tdLast+= '<a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="'+(data.id.value)+'" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>';
-
-          $("#iconLoading").html(html);
-
-          let t = $('.dataTable').DataTable(), keys = Object.keys(data), arrayForRow = [], arrayForAttributesRow = [], dataOne;
-
-          for (var i = 0; i < keys.length; i++) {
-            dataOne = data[keys[i]];
-
-            let options = dataOne.options == undefined ? '' : dataOne.options;
-
-            if(dataOne.type=="input" || dataOne.type=="identifier")
-            {
-              let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
-
-              arrayForRow.push(addTD[0]);
-
-              arrayForAttributesRow.push(addTD[1]);
-            }
-            else if(dataOne.type=="select")
-            {
-              let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
-
-              arrayForRow.push(addTD[0]);
-
-              arrayForAttributesRow.push(addTD[1]);
-            }
-          }
-
-          arrayForRow.push(tdLast);
-
-          t.row.add(arrayForRow).draw( false );
-
-          let TDLastEdit = '#i-'+data.id.value;
-
-          $(TDLastEdit).parent().attr('style', 'text-align: center');
-
-          let TRParent = $(TDLastEdit).parent().parent();
-
-          TRParent.find('td').each(function(i)
-          {
-            if(arrayForAttributesRow[i]!=undefined)
-            {
-              let keysAttributes = Object.keys(arrayForAttributesRow[i]);
-
-              for (var d = 0; d < keysAttributes.length; d++)
-              {
-                attributeVal = arrayForAttributesRow[i][keysAttributes[d]];
-
-                $(this).attr(keysAttributes[d], attributeVal);
-              }
-            }
-          });
-
-          TRParent.attr('id','row'+data.id.value);
-
-          // $("#statusInit").val("true");
-          $('#statusMouseOver').val("true");
-
-          $('.page-item').on('click', function(){
-            $('#statusMouseOver').val("false");
-
-            popoverConfirmation();
-          });
-
-          popoverConfirmation();
-        }
-        else if (result.success == false)
-        {
-          let html = '<i class="fa fa-times" aria-hidden="true" style="color: #ff5d5d;"></i>';
-
-          $("#iconLoading").html(html);
-        }
-      })
-      .fail(function() {
-        console.log("error");
-      })
-      .always(function() {
-        console.log("complete");
-      });
+      return html;
     }
-  });
+  }
 
-  $("th").on('click', function (){
-    popoverConfirmation();
-  })
+  function PreviewImage() {
+          var oFReader = new FileReader();
+          oFReader.readAsDataURL(document.getElementById("logoFile").files[0]);
 
-  $('#dataTable_wrapper > div:nth-child(3) > div.col-sm-12.col-md-7').on('mouseover','#dataTable_paginate > ul',function(e){
-    let statusMouseOver = $('#statusMouseOver').val()
+          oFReader.onload = function (oFREvent) {
+              document.getElementById("logoImage").src = oFREvent.target.result;
+          };
+  }
 
-    if(statusMouseOver=="false")
+  function dataTableEditPART2(result = ""){
+    let arrayJSON = {}, statusInitEdit = $("#statusInit").val(), arrayEditable = [];
+
+    if(result.length!=0)
     {
-      $('#statusMouseOver').val("true");
+      result = result.data;
 
-      $('.page-item').on('click', function(){
-        $('#statusMouseOver').val("false");
-
-        popoverConfirmation();
-      });
+      for (var i = 0; i < result.length; i++) {
+        arrayJSON[(result[i].id)] = result[i].name;
+      }
     }
-  });
 
-  $("select[name='dataTable_length'], input[type='search']").on('change', function(){
-    popoverConfirmation();
-  });
+    // if(statusInitEdit=="false")
+    // {
+      arrayEditable = result.length==0 ? [[1, 'category']] : [[1, 'subCategory'],[2, 'category', JSON.stringify(arrayJSON)]];
 
-  $('#logoFile').change(function(){
-    $('#progressImage').text("");
-    $('#progressImage').attr('aria-valuenow', 0)
-    $('#progressImage').attr('style', 'width: '+"0"+'%')
+      // $("#statusInit").val("true");
 
-    setTimeout(function(){
-      let form = $('form')[0];
-      let formData = new FormData(form);
-      let url = <?="'".$dir_.'uploadFile.php'."';"?>
+      $('.dataTable').Tabledit({
+        url: 'edit.php',
+        rowIdentifier: 'id',
+        editButton: false,
+        deleteButton: false,
+        hideIdentifier: false,
+        autoFocus: false,
+        columns: {
+            identifier: [0, 'id'],
+            editable: arrayEditable
+        },
+        onSuccess: function(data){
+          let id = data.id;
 
-      let sizeFile = $('input[type=file]')[0].files[0].size;
+          delete data['id'];
+          delete data['success'];
 
-      if(sizeFile <= 1700000)
-      {
-        PreviewImage();
-        formData.append('id', $('input[name=id]').val() );
-        formData.append('where', $('input[name=where]').val() );
-        formData.append('image', $('input[type=file]')[0].files[0]);
+          data = data.data;
 
-        $.ajax({
-          method: 'POST',
-          url: url,
-          data: formData,
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: function(result) {
-            let result_base64 = result;
-            let resultCheck = result.indexOf('base64');
+          let dataTable = $('.dataTable').DataTable(), trRow = "#row"+id, dataKeys = Object.keys(data), dataPosition;
 
-            if(resultCheck!=-1)
-            {
-              $('.formValidate').append("<input type='hidden' name='image' value='"+result_base64+"' />");
-            }
-          },
-          error: function(result) {
-            console.log("error");
-          },
-          xhr: function(){
-              var xhr = new window.XMLHttpRequest();
-              xhr.upload.addEventListener("progress", function(e){
+          for (var i = 0; i < dataKeys.length; i++)
+          {
+            dataPosition = data[dataKeys[i]];
 
-                if (e.lengthComputable) {
-                  percentComplete = parseInt( (e.loaded / e.total * 100), 10);
-                  $('#progressImage').text(percentComplete+"%");
-                  $('#progressImage').attr('aria-valuenow', percentComplete)
-                  $('#progressImage').attr('style', 'width: '+percentComplete+'%')
-                }
-                else{
-                     console.log("Length not computable.");
-                }
-              }, false);
-              return xhr;
+            let options = dataPosition.options == undefined ? '' : dataPosition.options;
+
+            // let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options, 'getEtiquette');
+            let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options);
+
+            let tdEdit = $(trRow).children("td[data-field='"+dataKeys[i]+"']");
+
+            // dataTable.cell( tdEdit ).data(addTD);
+            dataTable.cell( tdEdit ).data(dataPosition.name);
+
+            tdEdit.html(addTD);
+          }
         }
+      });
+    // }
+  }
+
+  function dataTableEdit(){
+    let where = $('#view').val();
+
+    if(where=="categorias" || where=="subCategorias")
+    {
+      if(where=="subCategorias")
+      {
+        let url = <?="'".$dir_.'subcategories/query.php'."';"?>
+        //
+        $.ajax({
+          method: "POST",
+          url: url,
+          dataType: "json",
+          data: { init: "success" }
+        })
+        .done(function(result)
+        {
+          dataTableEditPART2(result);
+        })
+        .fail(function() {
+        })
+        .always(function() {
         });
       }
-      else{
-        console.log("Supera el tamaño permitido")
+      else if(where=="categorias")
+      {
+        dataTableEditPART2();
       }
-    },1000);
 
-  })
-
-  ////////////////////////////////////////
-  $("#submitButtom").click(function(event) {
-    let form = $(".formValidate")
-
-    if (form[0].checkValidity() === false) {
-      event.preventDefault()
-      event.stopPropagation()
     }
+  }
 
-    form.addClass('was-validated');
-  });
-  ////////////////////////////////////////
+  $(document).ready(function(){
+    popoverConfirmation();
 
-  ////////////////////////////////////////
-  var previousElem;
-  $("input[type='radio']").click(function (e) {
-      var previous = $(this).attr('previous');
+    let optionsDatePicker = {
+      dateFormat: 'dd/mm/yy',
+    	autoHide : 'true',
+      };
 
-      if (previous == "true" && previousElem === this) {
-        $(this).prop('checked', false);
+    $('#since, #until').datepicker(optionsDatePicker);
+
+    $('#addItem').on('click', function(){
+      let form = $(".formValidate")
+      let where = $("#view").val();
+
+      if(where=="subCategorias"){
+        where = "subcategories";
       }
-      previousElem = this;
-      $(this).attr('previous', $(this).prop('checked'));
+      else if(where=="categorias"){
+        where = "categories";
+      }
 
+      if (form[0].checkValidity() === false)
+      {
+        event.preventDefault()
+        event.stopPropagation()
+
+        form.addClass('was-validated');
+      }
+      else
+      {
+        let data_= {}, name_ = $("input[name='name_']").val(), category_ = $("select[name='category_']").val();
+
+        $("#iconLoading").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+        $("#iconLoading").attr("style", "display: flex!important;");
+
+        if(where=="categories")
+        {
+          data_ = { category: name_ };
+        }
+        else if (where=="subcategories")
+        {
+          data_ = { subCategory: name_, category: category_ };
+        }
+
+        $.ajax({
+          method: "POST",
+          url: "<?=$dir_?>"+where+"/add.php",
+          dataType: "json",
+          data: data_
+        })
+        .done(function(result) {
+
+          if(result.success == true)
+          {
+            let data = result.data, html = '<i class="fa fa-check" aria-hidden="true" style="color: #16a085"></i>', tdLast = "";
+
+            tdLast+= '<div class="nonec" id="i-'+(data.id.value)+'"></div>'
+
+            tdLast+= '<a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="'+(data.id.value)+'" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>';
+
+            $("#iconLoading").html(html);
+
+            let t = $('.dataTable').DataTable(), keys = Object.keys(data), arrayForRow = [], arrayForAttributesRow = [], dataOne;
+
+            for (var i = 0; i < keys.length; i++) {
+              dataOne = data[keys[i]];
+
+              let options = dataOne.options == undefined ? '' : dataOne.options;
+
+              if(dataOne.type=="input" || dataOne.type=="identifier")
+              {
+                let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
+
+                arrayForRow.push(addTD[0]);
+
+                arrayForAttributesRow.push(addTD[1]);
+              }
+              else if(dataOne.type=="select")
+              {
+                let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
+
+                arrayForRow.push(addTD[0]);
+
+                arrayForAttributesRow.push(addTD[1]);
+              }
+            }
+
+            arrayForRow.push(tdLast);
+
+            t.row.add(arrayForRow).draw( false );
+
+            let TDLastEdit = '#i-'+data.id.value;
+
+            $(TDLastEdit).parent().attr('style', 'text-align: center');
+
+            let TRParent = $(TDLastEdit).parent().parent();
+
+            TRParent.find('td').each(function(i)
+            {
+              if(arrayForAttributesRow[i]!=undefined)
+              {
+                let keysAttributes = Object.keys(arrayForAttributesRow[i]);
+
+                for (var d = 0; d < keysAttributes.length; d++)
+                {
+                  attributeVal = arrayForAttributesRow[i][keysAttributes[d]];
+
+                  $(this).attr(keysAttributes[d], attributeVal);
+                }
+              }
+            });
+
+            TRParent.attr('id','row'+data.id.value);
+
+            // $("#statusInit").val("true");
+            $('#statusMouseOver').val("true");
+
+            $('.page-item').on('click', function(){
+              $('#statusMouseOver').val("false");
+
+              popoverConfirmation();
+            });
+
+            popoverConfirmation();
+          }
+          else if (result.success == false)
+          {
+            let html = '<i class="fa fa-times" aria-hidden="true" style="color: #ff5d5d;"></i>';
+
+            $("#iconLoading").html(html);
+          }
+        })
+        .fail(function() {
+          console.log("error");
+        })
+        .always(function() {
+          console.log("complete");
+        });
+      }
+    });
+
+    $("th").on('click', function (){
+      popoverConfirmation();
+    })
+
+    $('#dataTable_wrapper > div:nth-child(3) > div.col-sm-12.col-md-7').on('mouseover','#dataTable_paginate > ul',function(e){
+      let statusMouseOver = $('#statusMouseOver').val()
+
+      if(statusMouseOver=="false")
+      {
+        $('#statusMouseOver').val("true");
+
+        $('.page-item').on('click', function(){
+          $('#statusMouseOver').val("false");
+
+          popoverConfirmation();
+        });
+      }
+    });
+
+    $("select[name='dataTable_length'], input[type='search']").on('change', function(){
+      popoverConfirmation();
+    });
+
+    $('#logoFile').change(function(){
+      $('#progressImage').text("");
+      $('#progressImage').attr('aria-valuenow', 0)
+      $('#progressImage').attr('style', 'width: '+"0"+'%')
+
+      setTimeout(function(){
+        let form = $('form')[0];
+        let formData = new FormData(form);
+        let url = <?="'".$dir_.'uploadFile.php'."';"?>
+
+        let sizeFile = $('input[type=file]')[0].files[0].size;
+
+        if(sizeFile <= 1700000)
+        {
+          PreviewImage();
+          formData.append('id', $('input[name=id]').val() );
+          formData.append('where', $('input[name=where]').val() );
+          formData.append('image', $('input[type=file]')[0].files[0]);
+
+          $.ajax({
+            method: 'POST',
+            url: url,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(result) {
+              let result_base64 = result;
+              let resultCheck = result.indexOf('base64');
+
+              if(resultCheck!=-1)
+              {
+                $('.formValidate').append("<input type='hidden' name='image' value='"+result_base64+"' />");
+              }
+            },
+            error: function(result) {
+              console.log("error");
+            },
+            xhr: function(){
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function(e){
+
+                  if (e.lengthComputable) {
+                    percentComplete = parseInt( (e.loaded / e.total * 100), 10);
+                    $('#progressImage').text(percentComplete+"%");
+                    $('#progressImage').attr('aria-valuenow', percentComplete)
+                    $('#progressImage').attr('style', 'width: '+percentComplete+'%')
+                  }
+                  else{
+                       console.log("Length not computable.");
+                  }
+                }, false);
+                return xhr;
+          }
+          });
+        }
+        else{
+          console.log("Supera el tamaño permitido")
+        }
+      },1000);
+
+    })
+
+    ////////////////////////////////////////
+    $("#submitButtom").click(function(event) {
+      let form = $(".formValidate")
+
+      if (form[0].checkValidity() === false) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.addClass('was-validated');
+    });
+    ////////////////////////////////////////
+
+    ////////////////////////////////////////
+    var previousElem;
+    $("input[type='radio']").click(function (e) {
+        var previous = $(this).attr('previous');
+
+        if (previous == "true" && previousElem === this) {
+          $(this).prop('checked', false);
+        }
+        previousElem = this;
+        $(this).attr('previous', $(this).prop('checked'));
+
+    });
+    ////////////////////////////////////////
   });
-  ////////////////////////////////////////
-});
 </script>
 
 <script>
-$(function() {
-  $('textarea#description').summernote({
-        placeholder: '',
-        tabsize: 2,
-        height: 290
-      });
-});
+  $(function() {
+    $('textarea#description').summernote({
+          placeholder: '',
+          tabsize: 2,
+          height: 290
+        });
+  });
 </script>

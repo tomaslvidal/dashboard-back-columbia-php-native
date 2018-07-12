@@ -1,0 +1,37 @@
+tr > td:last-child{
+	text-align: center;
+}
+
+.datepicker-container{
+  z-index: 1200!important;
+}
+
+.ui-datepicker{
+  z-index:9999!important;
+  font-size:12px!important;
+}
+.ui-autocomplete{
+  z-index:9999!important;
+  font-size:12px!important;
+}
+
+.img-fluid {
+    max-width: 55%!important;
+    height: auto;
+}
+
+.invalid-tooltip, .valid-tooltip {
+	position: unset!important;
+	margin-top: 0.4em!important;
+}
+
+.rowOneFile{
+  display: flex;
+  flex: 1;
+}
+
+.rowTwoFile{
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
