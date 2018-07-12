@@ -9,7 +9,6 @@ include("{$dir}modelPage/inc/breadcrumb.php");
 
 include("{$dir}modelPage/firstPart.php");
 ?>
-
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
   <?
     include("{$dir}modelPage/parts/navbar.php");

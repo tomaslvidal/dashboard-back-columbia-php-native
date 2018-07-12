@@ -35,3 +35,17 @@ tr > td:last-child{
   flex: 1;
   justify-content: center;
 }
+
+#sidenavToggler{
+  float: right;
+}
+
+.nav-link[data-toggle=modal]{
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+}
+
+.fa-sign-out{
+  margin-right: 5px;
+}

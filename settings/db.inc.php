@@ -53,7 +53,7 @@ function db_query($i,$param){
 		${'row'.$i}=${'res'.$i}->fetch_assoc();
 
 		while (${'rowx'.$i} = ${'res'.$i}->fetch_assoc()){
-	  	$data[] = ${'rowx'.$i};
+	  		$data[] = ${'rowx'.$i};
 		}
 	}
 }

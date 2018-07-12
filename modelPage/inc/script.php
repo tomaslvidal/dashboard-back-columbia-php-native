@@ -6,8 +6,6 @@
 
 <script src="<?=$dir_?>modelPage/js/bootstrap.min.js?v=<?=filemtime("{$dir}modelPage/js/bootstrap.min.js")?>"></script>
 
-<script src="<?=$dir_?>modelPage/js/sb-admin.min.js?v=<?=filemtime("{$dir}modelPage/js/sb-admin.min.js")?>"></script>
-
 <script src="<?=$dir_?>modelPage/js/jquery.tabledit.min.js?v=<?=filemtime("{$dir}modelPage/js/popper.min.js")?>"></script>
 
 <script src="<?=$dir_?>modelPage/js/all.js?v=<?=filemtime("{$dir}modelPage/js/all.js")?>"></script>
@@ -18,7 +16,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 
-  <script>
+<script src="<?=$dir_?>modelPage/js/sb-admin.min.js?v=<?=filemtime("{$dir}modelPage/js/sb-admin.min.js")?>"></script>
+
+<script>
   function popoverConfirmation()
   {
     $('[data-toggle=confirmation]').confirmation({
