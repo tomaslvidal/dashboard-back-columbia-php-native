@@ -1,14 +1,16 @@
-<!-- Bootstrap core CSS-->
-<link href="<?=$dir_?>vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<!-- Custom fonts for this template-->
-<link href="<?=$dir_?>vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<!-- Custom styles for this template-->
-<link href="<?=$dir_?>css/sb-admin.css" rel="stylesheet">
-<link href="<?=$dir_?>css/responsive.css" rel="stylesheet">
+<link href="<?=$dir_?>modelPage/css/bootstrap.min.css" rel="stylesheet">
 
-<link href="<?=$dir_?>vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+<link href="<?=$dir_?>modelPage/css/sb-admin.min.css" rel="stylesheet">
+
+<link href="<?=$dir_?>modelPage/css/responsive.css" rel="stylesheet">
+
+<link href="<?=$dir_?>modelPage/css/jquery-ui.min.css" rel="stylesheet">
+
+<link href="<?=$dir_?>modelPage/css/styles.css" rel="stylesheet">
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
 
 <style>
 tr > td:last-child{

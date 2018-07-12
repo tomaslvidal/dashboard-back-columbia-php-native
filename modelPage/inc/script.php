@@ -1,25 +1,22 @@
-<script src="<?=$dir_?>vendor/jquery/jquery.min.js?v=<?=filemtime("{$dir}vendor/jquery/jquery.min.js")?>"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css" />
-<script src="<?=$dir_?>vendor/bootstrap/js/bootstrap.bundle.min.js?v=<?=filemtime("{$dir}vendor/bootstrap/js/bootstrap.bundle.min.js")?>"></script>
-<!-- Core plugin JavaScript-->
-<script src="<?=$dir_?>vendor/jquery-easing/jquery.easing.min.js?v=<?=filemtime("{$dir}vendor/jquery-easing/jquery.easing.min.js")?>"></script>
-<!-- Custom scripts for all pages-->
-<script src="<?=$dir_?>js/sb-admin.min.js?v=<?=filemtime("{$dir}js/sb-admin.min.js")?>"></script>
-<script src="<?=$dir_?>vendor/datatables/jquery.dataTables.js?v=<?=filemtime("{$dir}vendor/datatables/jquery.dataTables.js")?>"></script>
-<script src="<?=$dir_?>vendor/datatables/dataTables.bootstrap4.js?v=<?=filemtime("{$dir}vendor/datatables/dataTables.bootstrap4.js")?>"></script>
-<script src="<?=$dir_?>js/sb-admin-datatables.min.js?v=<?=filemtime("{$dir}js/sb-admin-datatables.min.js")?>"></script>
-<?
-//.js modificado, no cambiar
-?>
-<script src="<?=$dir_?>js/jquery.tabledit.min.js?v=<?=filemtime("{$dir}js/jquery.tabledit.min.js")?>"></script>
-<?
-//
-?>
+<script src="<?=$dir_?>modelPage/js/jquery-3.3.1.min.js?v=<?=filemtime("{$dir}modelPage/js/jquery-3.3.1.min.js")?>"></script>
+
+<script src="<?=$dir_?>modelPage/js/jquery-ui.min.js?v=<?=filemtime("{$dir}modelPage/js/jquery-ui.min.js")?>"></script>
+
+<script src="<?=$dir_?>modelPage/js/popper.min.js?v=<?=filemtime("{$dir}modelPage/js/popper.min.js")?>"></script>
+
+<script src="<?=$dir_?>modelPage/js/bootstrap.min.js?v=<?=filemtime("{$dir}modelPage/js/bootstrap.min.js")?>"></script>
+
+<script src="<?=$dir_?>modelPage/js/sb-admin.min.js?v=<?=filemtime("{$dir}modelPage/js/sb-admin.min.js")?>"></script>
+
+<script src="<?=$dir_?>modelPage/js/jquery.tabledit.min.js?v=<?=filemtime("{$dir}modelPage/js/popper.min.js")?>"></script>
+
+<script src="<?=$dir_?>modelPage/js/all.js?v=<?=filemtime("{$dir}modelPage/js/all.js")?>"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-confirmation2/dist/bootstrap-confirmation.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
 
 <script>
 function popoverConfirmation()
