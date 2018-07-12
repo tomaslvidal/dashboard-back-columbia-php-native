@@ -41,7 +41,7 @@ if(!empty($table))
           $email = verifyPost('email');
           if(verifyPost('checkWelcome') == 'true' && !empty($email) )
           {
-            $subject = "Furlongfox - ¡Bienvenido!";
+            $subject = "Columbia - ¡Bienvenido!";
 
             $headers  = 'MIME-Version: 1.0' . "\r\n";
 
