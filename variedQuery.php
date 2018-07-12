@@ -51,7 +51,7 @@ if(!empty($table))
 
             $headers .= 'To: '.verifyPost('email').'' . "\r\n";
 
-            $headers .= 'From: Furlongfox <welcome@furlong-fox.com.ar>' . "\r\n";
+            $headers .= 'From: Columbia <welcome@columbia.com.ar>' . "\r\n";
 
             // if($email_copia_oculta<>'')
             // {
