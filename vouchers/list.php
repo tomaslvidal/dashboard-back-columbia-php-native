@@ -31,14 +31,14 @@ include("{$dir}modelPage/firstPart.php");
             <div class="card-body row">
               <div class="col-lg-8">
                 <div class="table-responsive">
-                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <table class="table table-bordered dataTable" data-view="vouchers" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                       <tr>
                         <th>ID</th>
-                        <th>Usuario</th>
-                        <th>Nombre</th>
-                        <th>Descripcion</th>
-                        <th>Estado</th>
+                        <th data-which="userId" data-where="users">Usuario</th>
+                        <th data-which="name">Nombre</th>
+                        <th data-which="description">Descripcion</th>
+                        <th data-which="state" data-where="states">Estado</th>
                         <th>Fecha de creación</th>
                         <th><div style="display: block; width: 60px; height: 2px"></div></th>
                       </tr>
@@ -58,9 +58,9 @@ include("{$dir}modelPage/firstPart.php");
                       <?
                         db_query(0,'select * from vouchers');
                         $i=0;
-                        while($i<$tot)
-                        {
+                        while($i<$tot){
                           $nres = $res->data_seek($i);
+
                           $row = $res->fetch_assoc();
                       ?>
                       <tr data-id="row<?=$row['id']?>" id="row<?=$row['id']?>">
@@ -76,7 +76,7 @@ include("{$dir}modelPage/firstPart.php");
                         </td>
                       </tr>
                       <?
-                        $i++;
+                          $i++;
                         }
                       ?>
                     </tbody>
@@ -95,18 +95,20 @@ include("{$dir}modelPage/firstPart.php");
                 .borderStyle2{
                   border-width: 2px 1px 2px 1px;
                   border-style: solid;
-                  border-color: #dee2e6;
                 }
 
                 .borderStyle{
                   border-width: 0px 1px 0px 1px;
                   border-style: solid;
+                }
+
+                .borderColor{
                   border-color: #dee2e6;
                 }
               </style>
 
               <div class="col-lg-4">
-                <div class="col-12 borderStyle2">
+                <div class="col-12 borderStyle2 borderColor">
                   <div style="height: 48px;display: flex;align-items: center;padding-bottom: 2px;">
                     <h4 class="m-0">
                       Agregar
@@ -114,7 +116,7 @@ include("{$dir}modelPage/firstPart.php");
                   </div>
                 </div>
 
-                <div class="card-footer small text-muted borderStyle"></div>
+                <div class="card-footer small text-muted borderStyle borderColor"></div>
 
                 <style>
                   .styleRow{
@@ -124,7 +126,7 @@ include("{$dir}modelPage/firstPart.php");
                   }
                 </style>
 
-                <div class="col-12 borderStyle2" style="border-top: 0px;">
+                <div class="col-12 borderStyle2 borderColor" style="border-top: 0px;">
                   <form class="formValidate needs-validation" novalidate>
                     <div class="row styleRow">
                       <label for="userId">Usuario</label>

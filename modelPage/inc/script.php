@@ -6,7 +6,7 @@
 
 <script src="<?=$dir_?>modelPage/js/bootstrap.min.js?v=<?=filemtime("{$dir}modelPage/js/bootstrap.min.js")?>"></script>
 
-<script src="<?=$dir_?>modelPage/js/jquery.tabledit.min.js?v=<?=filemtime("{$dir}modelPage/js/popper.min.js")?>"></script>
+<script src="<?=$dir_?>modelPage/js/jquery.tabledit.min.js?v=<?=filemtime("{$dir}modelPage/js/jquery.tabledit.min.js")?>"></script>
 
 <script src="<?=$dir_?>modelPage/js/all.js?v=<?=filemtime("{$dir}modelPage/js/all.js")?>"></script>
 
@@ -19,8 +19,59 @@
 <script src="<?=$dir_?>modelPage/js/sb-admin.min.js?v=<?=filemtime("{$dir}modelPage/js/sb-admin.min.js")?>"></script>
 
 <script>
-  function popoverConfirmation()
-  {
+  function ajaxSelect(){
+    let table = $('.dataTable'), arrayForTableedit = [], arrayTemp;
+
+    table.find('thead').find('th').filter('[data-which]').each(function(i){
+      let position = $(this).index(), which = $(this).attr('data-which'), where = $(this).attr('data-where'), type = $(this).is('[data-where]').toString();
+
+      if(type!="true"){
+        arrayTemp = [position, which];
+
+        arrayForTableedit.push(arrayTemp);
+      }
+      else{
+        let url = "", optionSelect;
+
+        let dataAjax={
+          "init" : "success",
+          "dataWhere" : where
+        };
+
+        $.ajax({
+          method: "POST",
+          url: "<?=$dir_?>querySelect.php",
+          dataType: "json",
+          data: dataAjax,
+          async: false
+        })
+        .done(function(result){
+          let arrayJSON = {}, arrayEditable = [];
+
+          if(result.length!=0){
+            result = result.data;
+
+            for(var i = 0; i < result.length; i++){
+              arrayJSON[(result[i].id)] = result[i].name;
+            }
+          }
+
+          optionSelect = JSON.stringify(arrayJSON);
+        })
+        .fail(function(){
+        })
+        .always(function(){
+        });
+
+        arrayTemp = [position, which, optionSelect];
+
+        arrayForTableedit.push(arrayTemp);
+      }
+    });
+
+    table.data('fieldsEditable', arrayForTableedit);
+  }
+  function popoverConfirmation(){
     $('[data-toggle=confirmation]').confirmation({
       rootSelector: '[data-toggle=confirmation]',
       onConfirm: function(){
@@ -89,9 +140,7 @@
         if(data == true){
           let dataTable = $('.dataTable').DataTable();
 
-          let trRow = "#row"+id;
-
-          let row = dataTable.row( $(trRow) );
+          let trRow = "#row"+id, row = dataTable.row($(trRow));
 
           row.remove();
 
@@ -108,8 +157,7 @@
 
   }
 
-  function editTDHTML(field, name, value, type, options="", getEtiquette="")
-  {
+  function editTDHTML(field, name, value, type, options="", getEtiquette=""){
     let html = "";
 
     if(getEtiquette.length==0){
@@ -141,8 +189,7 @@
           html +='</td>';
         }
     }
-    else if(type=="select")
-    {
+    else if(type=="select"){
       options = options;
 
       if(getEtiquette.length==0){
@@ -192,8 +239,7 @@
   function dataTableEditPART2(result=""){
     let arrayJSON = {}, statusInitEdit = $("#statusInit").val(), arrayEditable = [];
 
-    if(result.length!=0)
-    {
+    if(result.length!=0){
       result = result.data;
 
       for(var i = 0; i < result.length; i++){
@@ -204,7 +250,8 @@
     arrayEditable = result.length==0 ? [[1, 'category']] : [[1, 'subCategory'],[2, 'category', JSON.stringify(arrayJSON)]];
 
     $('.dataTable').Tabledit({
-      url: 'edit.php',
+      url: '<?=$dir_?>editQuery.php',
+      method: 'three',
       rowIdentifier: 'id',
       editButton: false,
       deleteButton: false,
@@ -212,7 +259,7 @@
       autoFocus: false,
       columns: {
           identifier: [0, 'id'],
-          editable: arrayEditable
+          editable: $('.dataTable').data('fieldsEditable')
       },
       onSuccess: function(data){
         let id = data.id;
@@ -272,6 +319,8 @@
   }
 
   $(document).ready(function(){
+    ajaxSelect();
+
     popoverConfirmation();
 
     let optionsDatePicker = {
