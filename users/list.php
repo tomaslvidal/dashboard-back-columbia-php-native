@@ -15,17 +15,17 @@ include("{$dir}modelPage/firstPart.php");
     include("{$dir}modelPage/parts/navbar.php");
   ?>
     <div class="container-fluid">
-      <input type="hidden" id="view" name="view" value="categorias"/>
+      <input type="hidden" id="view" name="view" value="users"/>
       <!-- <input type="hidden" name="statusInit" id="statusInit" value="false"/> -->
       <input type="hidden" name="statusMouseOver" id="statusMouseOver" value="false"/>
       <?
-      echo(breadcrumbName('Categorías','Listado'));
+      echo(breadcrumbName('Usuarios','Listado'));
       ?>
       <div class="row">
         <div class="col-12">
           <div class="card mb-3">
             <div class="card-header">
-              <i class="fa fa-table"></i> Categorías </div>
+              <i class="fa fa-table"></i> Usuarios</div>
             <div class="card-body row">
               <div class="col-lg-8">
                 <div class="table-responsive">
@@ -33,32 +33,50 @@ include("{$dir}modelPage/firstPart.php");
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Categoría</th>
+                      <th>Usuario</th>
+                      <th>Contraseña</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Email</th>
+                      <th>Teléfono</th>
+                      <th>Fecha Creacion</th>
                       <th><div style="display: block; width: 60px; height: 2px"></div></th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th>ID</th>
-                      <th>Categoría</th>
+                      <th>Usuario</th>
+                      <th>Contraseña</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Email</th>
+                      <th>Teléfono</th>
+                      <th>Fecha Creacion</th>
                       <th><div style="display: block; width: 60px; height: 2px"></div></th>
                     </tr>
                   </tfoot>
                   <tbody>
                     <?
-                      db_query(0,'select * from categorias');
+                      db_query(0,'select * from users');
                       $i=0;
                       while($i<$tot)
                       {
                         $nres = $res->data_seek($i);
                         $row = $res->fetch_assoc();
                     ?>
-                    <tr data-id="row<?=$row['idCat']?>" id="row<?=$row['idCat']?>">
-                      <td data-field="id" ><?=$row['idCat']?></td>
-                      <td data-field="category" ><?=$row['nombre']?></td>
+                    <tr data-id="row<?=$row['id']?>" id="row<?=$row['id']?>">
+                      <td data-field="id"><?=$row['id']?></td>
+                      <td data-field="user" ><?=$row['user']?></td>
+                      <td data-field="password" ><?=$row['password']?></td>
+                      <td data-field="name" ><?=$row['name']?></td>
+                      <td data-field="lastName" ><?=$row['lastName']?></td>
+                      <td data-field="email" ><?=$row['email']?></td>
+                      <td data-field="telephone" ><?=$row['telephone']?></td>
+                      <td style="text-align: center;"><?=$row['dateCreated']?></td>
                       <td style="text-align: center;">
-                        <!-- <a style="padding-right: 15px;" href="<?=$dir_?>categories/add.php?id=<?=$row['idCat']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
-                        <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['idCat']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                        <!-- <a style="padding-right: 15px;" href="<?=$dir_?>categories/add.php?id=<?=$row['id']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
+                        <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['id']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
                       </td>
                     </tr>
                     <?
@@ -78,9 +96,9 @@ include("{$dir}modelPage/firstPart.php");
               }
               </style>
               <div class="col-lg-4">
-                <div style="height: 39px">
-                </div>
-                <div class="col-12" style="margin-top: 6px;border: 2px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+                <!-- <div style="height: 39px">
+                </div> -->
+                <div class="col-12" style="/*margin-top: 6px;*/border: 2px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
                   <div style="height: 48px;display: flex;align-items: center;padding-bottom: 2px;">
                     <h4 class="m-0">Agregar
                       <!-- <span class="badge badge-secondary" style="background-color: #007bff;font-size: 45%;">New</span> -->
@@ -92,8 +110,50 @@ include("{$dir}modelPage/firstPart.php");
                   <form class="formValidate needs-validation" novalidate>
                     <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
                       <label for="name">Nombre</label>
+
                       <input type="text" class="form-control" name="name_" value="" id="name" placeholder="" required="">
-                      <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small>
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
+                    </div>
+
+                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                      <label for="lastName">Apellido</label>
+
+                      <input type="text" class="form-control" name="lastName_" value="" id="lastName" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
+                    </div>
+
+                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                      <label for="user">Usuario</label>
+
+                      <input type="text" class="form-control" name="user_" value="" id="user" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el usuario</small> -->
+                    </div>
+
+                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                      <label for="password">Contraseña</label>
+
+                      <input type="text" class="form-control" name="password_" value="" id="password" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
+                    </div>
+
+                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                      <label for="email">Email</label>
+
+                      <input type="text" class="form-control" name="email_" value="" id="email" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
+                    </div>
+
+                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                      <label for="telephone">Teléfono</label>
+
+                      <input type="text" class="form-control" name="telephone_" value="" id="telephone" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
                     </div>
                   </form>
                   <div class="row" style="padding: 20px; padding-top: 8px; padding-bottom: 20px">

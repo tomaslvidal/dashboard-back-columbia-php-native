@@ -25,6 +25,7 @@
       rootSelector: '[data-toggle=confirmation]',
       onConfirm: function(){
         let id = $(this)[0].getAttribute('data-id');
+        
         deleteQuick(id);
       }
     });
@@ -33,56 +34,49 @@
   }
 
   function optionsSubCat(val = "", subCategory = ""){
-    let url = <?="'".$dir_.'packages/query.php'."';"?>
+    let url = '<?=$dir_?>packages/query.php';
     
     let id_ = val, html = "", dataAjax={};
 
-    if( (id_.toString()).length>0 )
-    {
-      dataAjax = {
+    if((id_.toString()).length>0){
+      dataAjax={
         "init" : "success",
         "id" : id_
       };
     }
-    else
-    {
-      dataAjax = {
+    else{
+      dataAjax={
         "init" : "success"
       };
     }
 
-    //
     $.ajax({
       method: "POST",
       url: url,
       dataType: "json",
       data: dataAjax
     })
-    .done(function(result)
-    {
-      let data = result.data
-      // html+="<select class='form-control' name='idSubcat' id='idSubcat'>";
-      for (var i = 0; i < data.length; i++)
-      {
+    .done(function(result){
+      let data = result.data;
+
+      for (var i = 0; i < data.length; i++){
         html+=`<option value="${data[i].id}"`+( (subCategory.length>0 && subCategory==data[i].id) ? 'selected' : '')+`>${data[i].name}</option>`;
       }
-      // html+="</select>";
+
       $('#idSubcat').html(html);
     })
-    .fail(function() {
+    .fail(function(){
     })
-    .always(function() {
+    .always(function(){
     });
   }
 
-  function deleteQuick(id = "")
-  {
+  function deleteQuick(id=""){
     let view = $('#view').val();
 
-    let url = <?="'".$dir_.'deleteQuick.php'."';"?>
+    let url = '<?=$dir_?>deleteQuick.php';
 
-    if((view=="users" || view=="companies" || view=="packages" || view=="subCategorias" || view=="categorias") && id!="")
-    {
+    if((view=="users" || view=="companies" || view=="packages" || view=="subCategorias" || view=="categorias") && id!=""){
       $.ajax({
         method: "POST",
         url: url,
@@ -92,8 +86,7 @@
       .done(function(result) {
         let data = result.success;
 
-        if(data == true)
-        {
+        if(data == true){
           let dataTable = $('.dataTable').DataTable();
 
           let trRow = "#row"+id;
@@ -107,57 +100,24 @@
         else if(data == false){
         }
       })
-      .fail(function() {
+      .fail(function(){
       })
-      .always(function() {
+      .always(function(){
       });
     }
 
   }
 
-  // function editTDHTML(field, name, options="")
-  // {
-  //   let html = "";
-  //
-  //   if(field=="name")
-  //   {
-  //     html +='<td data-field="'+field+'" class="tabledit-view-mode" style="cursor: pointer;">';
-  //       html +='<span class="tabledit-span">'+name+'</span>';
-  //       html +='<input class="tabledit-input form-control input-sm" type="text" name="name" value="'+name+'" style="display: none;" disabled="">';
-  //     html +='</td>'
-  //   }
-  //   else if(field="category")
-  //   {
-  //     options = options[1][2];
-  //
-  //     let optionsinJSON = JSON.parse(options)
-  //
-  //     html +='<td data-field="category" class="tabledit-view-mode" style="cursor: pointer;">'
-  //     html +='  <span class="tabledit-span">'+optionsinJSON[name]+'</span>'
-  //     html +='  <select class="tabledit-input form-control input-sm" name="category" style="display: none;" disabled="">'
-  //               for (var i = 0; i < Object.keys(optionsinJSON).length; i++)
-  //               {
-  //                 html +='<option value="'+Object.keys(optionsinJSON)[i]+'"'+(Object.keys(optionsinJSON)[i]==name ? 'selected' : '')+'>'+optionsinJSON[Object.keys(optionsinJSON)[i].toString()]+'</option>';
-  //               }
-  //     html +='  </select>'
-  //     html +='</td>'
-  //   }
-  //
-  //   return html;
-  // }
-
   function editTDHTML(field, name, value, type, options="", getEtiquette="")
   {
     let html = "";
 
-    if(getEtiquette.length==0)
-    {
+    if(getEtiquette.length==0){
       let attributesTD = {};
     }
 
-    if(type=="input" || type=="identifier")
-    {
-      let TDClass = type=="input" ? 'tabledit-view-mode' : 'sorting_1';;
+    if(type=="input" || type=="identifier"){
+      let TDClass = type=="input" ? 'tabledit-view-mode' : 'sorting_1';
 
       let TDStyle = type=="input" ? 'cursor: pointer' : '';
 
@@ -169,49 +129,44 @@
 
       let styleInput = type=="input" ? 'display: none;' : '';
 
-        if(getEtiquette.length==0)
-        {
+        if(getEtiquette.length==0){
           attributesTD = type=="input" ? {"data-field":field, "class":"tabledit-view-mode", "style":"cursor: pointer"} : {"data-field":field,"class":"sorting_1"};
         }
         else{
-          html +='<td data-field="'+field+'" class="'+TDClass+'" style="'+TDStyle+'">'
+          html +='<td data-field="'+field+'" class="'+TDClass+'" style="'+TDStyle+'">';
         }
             html +='<span class="'+classSpan+'">'+name+'</span>';
             html +='<input class="'+classInput+'" type="'+typeInput+'" name="'+field+'" value="'+name+'" style="'+styleInput+'" disabled="">';
         if(getEtiquette.length>0){
-          html +='</td>'
+          html +='</td>';
         }
     }
     else if(type=="select")
     {
       options = options;
 
-      if(getEtiquette.length==0)
-      {
-        attributesTD = {"data-field":field,"class":"tabledit-view-mode","style":"cursor: pointer"}
+      if(getEtiquette.length==0){
+        attributesTD = {"data-field":field,"class":"tabledit-view-mode","style":"cursor: pointer"};
       }
-      else
-      {
-        html +='<td data-field="'+field+'" class="tabledit-view-mode" style="cursor: pointer;">'
+      else{
+        html +='<td data-field="'+field+'" class="tabledit-view-mode" style="cursor: pointer;">';
       }
 
-      html +='  <span class="tabledit-span">'+name+'</span>'
-      html +='  <select class="tabledit-input form-control input-sm" name="'+field+'" style="display: none;" disabled="">'
+      html +='  <span class="tabledit-span">'+name+'</span>';
+      html +='  <select class="tabledit-input form-control input-sm" name="'+field+'" style="display: none;" disabled="">';
                 for (var i = 0; i < options.length; i++)
                 {
                   html +='<option value="'+options[i].value+'"'+(options[i].value==value ? 'selected' : '')+'>'+options[i].name+'</option>';
                 }
-      html +='  </select>'
+      html +='  </select>';
 
-      if(getEtiquette.length>0)
-      {
-        html +='</td>'
+      if(getEtiquette.length>0){
+        html +='</td>';
       }
     }
 
-    if(getEtiquette.length==0)
-    {
-      let parts = []
+    if(getEtiquette.length==0){
+      let parts = [];
 
       parts[0] = html;
 
@@ -219,110 +174,100 @@
 
       return parts;
     }
-    else
-    {
+    else{
       return html;
     }
   }
 
-  function PreviewImage() {
-          var oFReader = new FileReader();
-          oFReader.readAsDataURL(document.getElementById("logoFile").files[0]);
+  function PreviewImage(){
+    var oFReader = new FileReader();
 
-          oFReader.onload = function (oFREvent) {
-              document.getElementById("logoImage").src = oFREvent.target.result;
-          };
+    oFReader.readAsDataURL(document.getElementById("logoFile").files[0]);
+
+    oFReader.onload = function(oFREvent){
+        document.getElementById("logoImage").src = oFREvent.target.result;
+    };
   }
 
-  function dataTableEditPART2(result = ""){
+  function dataTableEditPART2(result=""){
     let arrayJSON = {}, statusInitEdit = $("#statusInit").val(), arrayEditable = [];
 
     if(result.length!=0)
     {
       result = result.data;
 
-      for (var i = 0; i < result.length; i++) {
+      for(var i = 0; i < result.length; i++){
         arrayJSON[(result[i].id)] = result[i].name;
       }
     }
 
-    // if(statusInitEdit=="false")
-    // {
-      arrayEditable = result.length==0 ? [[1, 'category']] : [[1, 'subCategory'],[2, 'category', JSON.stringify(arrayJSON)]];
+    arrayEditable = result.length==0 ? [[1, 'category']] : [[1, 'subCategory'],[2, 'category', JSON.stringify(arrayJSON)]];
 
-      // $("#statusInit").val("true");
+    $('.dataTable').Tabledit({
+      url: 'edit.php',
+      rowIdentifier: 'id',
+      editButton: false,
+      deleteButton: false,
+      hideIdentifier: false,
+      autoFocus: false,
+      columns: {
+          identifier: [0, 'id'],
+          editable: arrayEditable
+      },
+      onSuccess: function(data){
+        let id = data.id;
 
-      $('.dataTable').Tabledit({
-        url: 'edit.php',
-        rowIdentifier: 'id',
-        editButton: false,
-        deleteButton: false,
-        hideIdentifier: false,
-        autoFocus: false,
-        columns: {
-            identifier: [0, 'id'],
-            editable: arrayEditable
-        },
-        onSuccess: function(data){
-          let id = data.id;
+        delete data.id;
 
-          delete data['id'];
-          delete data['success'];
+        delete data.success;
 
-          data = data.data;
+        data = data.data;
 
-          let dataTable = $('.dataTable').DataTable(), trRow = "#row"+id, dataKeys = Object.keys(data), dataPosition;
+        let dataTable = $('.dataTable').DataTable(), trRow = "#row"+id, dataKeys = Object.keys(data), dataPosition;
 
-          for (var i = 0; i < dataKeys.length; i++)
-          {
-            dataPosition = data[dataKeys[i]];
+        for(var i = 0; i < dataKeys.length; i++){
+          dataPosition = data[dataKeys[i]];
 
-            let options = dataPosition.options == undefined ? '' : dataPosition.options;
+          let options = dataPosition.options == undefined ? '' : dataPosition.options;
 
-            // let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options, 'getEtiquette');
-            let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options);
+          // let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options, 'getEtiquette');
+          let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options);
 
-            let tdEdit = $(trRow).children("td[data-field='"+dataKeys[i]+"']");
+          let tdEdit = $(trRow).children("td[data-field='"+dataKeys[i]+"']");
 
-            // dataTable.cell( tdEdit ).data(addTD);
-            dataTable.cell( tdEdit ).data(dataPosition.name);
+          // dataTable.cell( tdEdit ).data(addTD);
+          dataTable.cell( tdEdit ).data(dataPosition.name);
 
-            tdEdit.html(addTD);
-          }
+          tdEdit.html(addTD);
         }
-      });
-    // }
+      }
+    });
   }
 
   function dataTableEdit(){
     let where = $('#view').val();
 
-    if(where=="categorias" || where=="subCategorias")
-    {
-      if(where=="subCategorias")
-      {
-        let url = <?="'".$dir_.'subcategories/query.php'."';"?>
-        //
+    if(where=="categorias" || where=="subCategorias"){
+      if(where=="subCategorias"){
+        let url = '<?=$dir_?>subcategories/query.php';
+
         $.ajax({
           method: "POST",
           url: url,
           dataType: "json",
           data: { init: "success" }
         })
-        .done(function(result)
-        {
+        .done(function(result){
           dataTableEditPART2(result);
         })
-        .fail(function() {
+        .fail(function(){
         })
-        .always(function() {
+        .always(function(){
         });
       }
-      else if(where=="categorias")
-      {
+      else if(where=="categorias"){
         dataTableEditPART2();
       }
-
     }
   }
 
@@ -337,52 +282,36 @@
     $('#since, #until').datepicker(optionsDatePicker);
 
     $('#addItem').on('click', function(){
-      let form = $(".formValidate")
+      let form = $(".formValidate");
+
       let where = $("#view").val();
 
-      if(where=="subCategorias"){
-        where = "subcategories";
-      }
-      else if(where=="categorias"){
-        where = "categories";
-      }
+      if(form[0].checkValidity()===false){
+        event.preventDefault();
 
-      if (form[0].checkValidity() === false)
-      {
-        event.preventDefault()
-        event.stopPropagation()
+        event.stopPropagation();
 
         form.addClass('was-validated');
       }
-      else
-      {
+      else{
         let data_= {}, name_ = $("input[name='name_']").val(), category_ = $("select[name='category_']").val();
 
         $("#iconLoading").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
         $("#iconLoading").attr("style", "display: flex!important;");
 
-        if(where=="categories")
-        {
-          data_ = { category: name_ };
-        }
-        else if (where=="subcategories")
-        {
-          data_ = { subCategory: name_, category: category_ };
-        }
-
         $.ajax({
-          method: "POST",
-          url: "<?=$dir_?>"+where+"/add.php",
+          method: "GET",
+          url: "<?=$dir_?>"+where+"/add.php?"+$('.formValidate').serialize(),
           dataType: "json",
-          data: data_
+          // data: data_
         })
-        .done(function(result) {
+        .done(function(result){
 
-          if(result.success == true)
-          {
+          if(result.success == true){
             let data = result.data, html = '<i class="fa fa-check" aria-hidden="true" style="color: #16a085"></i>', tdLast = "";
 
-            tdLast+= '<div class="nonec" id="i-'+(data.id.value)+'"></div>'
+            tdLast+= '<div class="nonec" id="i-'+(data.id.value)+'"></div>';
 
             tdLast+= '<a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="'+(data.id.value)+'" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>';
 
@@ -395,16 +324,14 @@
 
               let options = dataOne.options == undefined ? '' : dataOne.options;
 
-              if(dataOne.type=="input" || dataOne.type=="identifier")
-              {
+              if(dataOne.type=="input" || dataOne.type=="identifier"){
                 let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
 
                 arrayForRow.push(addTD[0]);
 
                 arrayForAttributesRow.push(addTD[1]);
               }
-              else if(dataOne.type=="select")
-              {
+              else if(dataOne.type=="select"){
                 let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
 
                 arrayForRow.push(addTD[0]);
@@ -423,14 +350,11 @@
 
             let TRParent = $(TDLastEdit).parent().parent();
 
-            TRParent.find('td').each(function(i)
-            {
-              if(arrayForAttributesRow[i]!=undefined)
-              {
+            TRParent.find('td').each(function(i){
+              if(arrayForAttributesRow[i]!=undefined){
                 let keysAttributes = Object.keys(arrayForAttributesRow[i]);
 
-                for (var d = 0; d < keysAttributes.length; d++)
-                {
+                for (var d = 0; d < keysAttributes.length; d++){
                   attributeVal = arrayForAttributesRow[i][keysAttributes[d]];
 
                   $(this).attr(keysAttributes[d], attributeVal);
@@ -451,17 +375,16 @@
 
             popoverConfirmation();
           }
-          else if (result.success == false)
-          {
+          else if (result.success == false){
             let html = '<i class="fa fa-times" aria-hidden="true" style="color: #ff5d5d;"></i>';
 
             $("#iconLoading").html(html);
           }
         })
-        .fail(function() {
+        .fail(function(){
           console.log("error");
         })
-        .always(function() {
+        .always(function(){
           console.log("complete");
         });
       }
@@ -469,13 +392,12 @@
 
     $("th").on('click', function (){
       popoverConfirmation();
-    })
+    });
 
     $('#dataTable_wrapper > div:nth-child(3) > div.col-sm-12.col-md-7').on('mouseover','#dataTable_paginate > ul',function(e){
-      let statusMouseOver = $('#statusMouseOver').val()
+      let statusMouseOver = $('#statusMouseOver').val();
 
-      if(statusMouseOver=="false")
-      {
+      if(statusMouseOver=="false"){
         $('#statusMouseOver').val("true");
 
         $('.page-item').on('click', function(){
@@ -492,21 +414,28 @@
 
     $('#logoFile').change(function(){
       $('#progressImage').text("");
-      $('#progressImage').attr('aria-valuenow', 0)
-      $('#progressImage').attr('style', 'width: '+"0"+'%')
+
+      $('#progressImage').attr('aria-valuenow', 0);
+
+      $('#progressImage').attr('style', 'width: '+"0"+'%');
 
       setTimeout(function(){
         let form = $('form')[0];
+
         let formData = new FormData(form);
-        let url = <?="'".$dir_.'uploadFile.php'."';"?>
+
+        let url = '<?=$dir_?>uploadFile.php';
 
         let sizeFile = $('input[type=file]')[0].files[0].size;
 
-        if(sizeFile <= 1700000)
+        if(sizeFile<=1700000)
         {
           PreviewImage();
-          formData.append('id', $('input[name=id]').val() );
-          formData.append('where', $('input[name=where]').val() );
+
+          formData.append('id', $('input[name=id]').val());
+
+          formData.append('where', $('input[name=where]').val());
+
           formData.append('image', $('input[type=file]')[0].files[0]);
 
           $.ajax({
@@ -518,6 +447,7 @@
             processData: false,
             success: function(result) {
               let result_base64 = result;
+
               let resultCheck = result.indexOf('base64');
 
               if(resultCheck!=-1)
@@ -530,13 +460,17 @@
             },
             xhr: function(){
                 var xhr = new window.XMLHttpRequest();
+
                 xhr.upload.addEventListener("progress", function(e){
 
                   if (e.lengthComputable) {
                     percentComplete = parseInt( (e.loaded / e.total * 100), 10);
+
                     $('#progressImage').text(percentComplete+"%");
-                    $('#progressImage').attr('aria-valuenow', percentComplete)
-                    $('#progressImage').attr('style', 'width: '+percentComplete+'%')
+
+                    $('#progressImage').attr('aria-valuenow', percentComplete);
+
+                    $('#progressImage').attr('style', 'width: '+percentComplete+'%');
                   }
                   else{
                        console.log("Length not computable.");
@@ -547,47 +481,43 @@
           });
         }
         else{
-          console.log("Supera el tamaño permitido")
+          console.log("Supera el tamaño permitido");
         }
       },1000);
+    });
 
-    })
-
-    ////////////////////////////////////////
     $("#submitButtom").click(function(event) {
-      let form = $(".formValidate")
+      let form = $(".formValidate");
 
       if (form[0].checkValidity() === false) {
-        event.preventDefault()
-        event.stopPropagation()
+        event.preventDefault();
+
+        event.stopPropagation();
       }
 
       form.addClass('was-validated');
     });
-    ////////////////////////////////////////
 
-    ////////////////////////////////////////
     var previousElem;
-    $("input[type='radio']").click(function (e) {
+
+    $("input[type='radio']").click(function(e){
         var previous = $(this).attr('previous');
 
-        if (previous == "true" && previousElem === this) {
+        if (previous == "true" && previousElem === this){
           $(this).prop('checked', false);
         }
+
         previousElem = this;
+
         $(this).attr('previous', $(this).prop('checked'));
-
     });
-    ////////////////////////////////////////
   });
-</script>
 
-<script>
-  $(function() {
+  $(function(){
     $('textarea#description').summernote({
-          placeholder: '',
-          tabsize: 2,
-          height: 290
-        });
+      placeholder: '',
+      tabsize: 2,
+      height: 290
+    });
   });
 </script>

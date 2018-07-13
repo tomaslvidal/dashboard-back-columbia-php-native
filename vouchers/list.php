@@ -15,110 +15,171 @@ include("{$dir}modelPage/firstPart.php");
     include("{$dir}modelPage/parts/navbar.php");
   ?>
     <div class="container-fluid">
-      <input type="hidden" id="view" name="view" value="users"/>
+      <input type="hidden" id="view" name="view" value="categorias"/>
+
+      <!-- <input type="hidden" name="statusInit" id="statusInit" value="false"/> -->
+
+      <input type="hidden" name="statusMouseOver" id="statusMouseOver" value="false"/>
       <?
-      echo(breadcrumbName('Usuarios', 'Listado'));
+      echo(breadcrumbName('Vouchers','Listado'));
       ?>
       <div class="row">
         <div class="col-12">
           <div class="card mb-3">
             <div class="card-header">
-              <i class="fa fa-table"></i> Usuarios </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Usuario</th>
-                      <th>Panel</th>
-                      <th>Empresa</th>
-                      <th>Email</th>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th>Telefono</th>
-                      <th>Tipo de documento</th>
-                      <th>Numero de documento</th>
-                      <th>Centro de costo</th>
-                      <th>Fecha de registro</th>
-                      <th>Fecha de modificación</th>
-                      <th><div style="display: block; width: 60px; height: 2px"></div></th>
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>Usuario</th>
-                      <th>Panel</th>
-                      <th>Empresa</th>
-                      <th>Email</th>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th>Telefono</th>
-                      <th>Tipo de documento</th>
-                      <th>Numero de documento</th>
-                      <th>Centro de costo</th>
-                      <th>Fecha de registro</th>
-                      <th>Fecha de modificacion</th>
-                      <th><div style="display: block; width: 60px; height: 2px"></div></th>
-                    </tr>
-                  </tfoot>
-                  <tbody>
-                    <?
-                      db_query(0,'select * from users where estado="1"');
-                      $i=0;
-                      while($i<$tot)
-                      {
-                        $nres = $res->data_seek($i);
-                        $row = $res->fetch_assoc();
-
-                    ?>
-                    <tr id="row<?=$row['id']?>">
-                      <td><?=$row['user']?></td>
-                      <td><?=$row['panel']=="adm" ? 'admin' : $row['panel']?></td>
-                      <td>
+              <i class="fa fa-table"></i> Vouchers </div>
+            <div class="card-body row">
+              <div class="col-lg-8">
+                <div class="table-responsive">
+                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Estado</th>
+                        <th>Fecha de creación</th>
+                        <th><div style="display: block; width: 60px; height: 2px"></div></th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Estado</th>
+                        <th>Fecha de creación</th>
+                        <th><div style="display: block; width: 60px; height: 2px"></div></th>
+                      </tr>
+                    </tfoot>
+                    <tbody>
                       <?
-                      $id = $row['idCompany'];
-                      db_query(1, "select * from companies where id='{$id}'");
-                      echo $row1['name'];
-                      ?>
-                      </td>
-                      <td><?=$row['email']?></td>
-                      <td><?=$row['name']?></td>
-                      <td><?=$row['lastname']?></td>
-                      <td><?=$row['telephone']?></td>
-                      <td><?=$row['typeDocument']?></td>
-                      <td><?=$row['nroDocument']?></td>
-                      <td><?=$row['centerCost']?></td>
-                      <td><?=date('d/m/Y',strtotime($row['fechaRegistro']))?></td>
-                      <td>
-                      <?
-                        $fecha = date('d/m/Y',strtotime($row['fechaModificacion']));
-                        if($fecha != '31/12/1969')
+                        db_query(0,'select * from vouchers');
+                        $i=0;
+                        while($i<$tot)
                         {
-                          printf($fecha);
+                          $nres = $res->data_seek($i);
+                          $row = $res->fetch_assoc();
+                      ?>
+                      <tr data-id="row<?=$row['id']?>" id="row<?=$row['id']?>">
+                        <td data-field="id" ><?=$row['id']?></td>
+                        <td data-field="userId" ><?=$row['userId']?></td>
+                        <td data-field="name" ><?=$row['name']?></td>
+                        <td data-field="description" ><?=$row['description']?></td>
+                        <td data-field="state" ><?=$row['state']?></td>
+                        <td data-field="dateCreated" ><?=$row['dateCreated']?></td>
+                        <td style="text-align: center;">
+                          <!-- <a style="padding-right: 15px;" href="<?=$dir_?>categories/add.php?id=<?=$row['idCat']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
+                          <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['idCat']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                        </td>
+                      </tr>
+                      <?
+                        $i++;
                         }
                       ?>
-                      </td>
-                      <td style="text-align: center;">
-                        <a style="padding-right: 15px;" href="<?=$dir_?>users/add.php?id=<?=$row['id']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                        <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['id']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
-                      </td>
-                    </tr>
-                    <?
-                      $i++;
-                      }
-                    ?>
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-            <div class="card-footer small text-muted"></div>
-          </div>
+
+              <style>
+                #iconLoading{
+                  display: none;
+                  align-self: center;
+                  margin-left: 8px;
+                  color: #16a085;
+                }
+
+                .borderStyle2{
+                  border-width: 2px 1px 2px 1px;
+                  border-style: solid;
+                  border-color: #dee2e6;
+                }
+
+                .borderStyle{
+                  border-width: 0px 1px 0px 1px;
+                  border-style: solid;
+                  border-color: #dee2e6;
+                }
+              </style>
+
+              <div class="col-lg-4">
+                <div class="col-12 borderStyle2">
+                  <div style="height: 48px;display: flex;align-items: center;padding-bottom: 2px;">
+                    <h4 class="m-0">
+                      Agregar
+                    </h4>
+                  </div>
+                </div>
+
+                <div class="card-footer small text-muted borderStyle"></div>
+
+                <style>
+                  .styleRow{
+                    padding: 20px;
+                    padding-top: 8px; 
+                    padding-bottom: 10px
+                  }
+                </style>
+
+                <div class="col-12 borderStyle2" style="border-top: 0px;">
+                  <form class="formValidate needs-validation" novalidate>
+                    <div class="row styleRow">
+                      <label for="userId">Usuario</label>
+
+                      <input type="text" class="form-control" name="userId_" value="" id="userId" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
+                    </div>
+
+                    <div class="row styleRow">
+                      <label for="name">Nombre</label>
+                      
+                      <input type="text" class="form-control" name="name_" value="" id="name" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
+                    </div>
+
+                    <div class="row styleRow">
+                      <label for="description">Descripción</label>
+                      
+                      <input type="text" class="form-control" name="description_" value="" id="description" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
+                    </div>
+
+                    <div class="row styleRow">
+                      <label for="state">Estado</label>
+                      
+                      <input type="text" class="form-control" name="state_" value="" id="state" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
+                    </div>
+                  </form>
+
+                  <div class="row styleRow" style="padding-bottom: 20px!important">
+                    <div style="display: flex; flex: 1; padding-left: 5px;">
+                      <div id="addItem" style="display: flex; align-items: center; cursor: pointer;">
+                        <i class="fa fa-plus-circle" aria-hidden="true" style="font-size: 20px; color: #16a085; margin-right: 4px;"></i>
+
+                        <span>Agregar</span>
+                      </div>
+
+                      <div id="iconLoading">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
       </div>
     </div>
-    <?
-      include("{$dir}modelPage/secondPart.php");
-    ?>
-  </body>
+<?
+  include("{$dir}modelPage/secondPart.php");
+?>
+</body>
 
-  </html>
+</html>
