@@ -23,7 +23,7 @@ if($_POST['init']=="success"){
       $row = $res->fetch_assoc();
 
       array_push($jsondata["data"],array(
-        "name" => $row['name'],
+        "name" => !isset($row['lastName']) ? $row['name'] : $row['name']." ".$row['lastName'],
         "id" => $row['id']
       ));
     }

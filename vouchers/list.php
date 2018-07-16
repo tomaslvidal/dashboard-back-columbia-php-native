@@ -56,7 +56,7 @@ include("{$dir}modelPage/firstPart.php");
                     </tfoot>
                     <tbody>
                       <?
-                        db_query(0,'select * from vouchers');
+                        db_query(0,'select vouchers.*, states.name as stateName, users.id as userId, users.name as userName, users.lastName as userLastName from vouchers join users on vouchers.userId = users.id join states on vouchers.state = states.id');
                         $i=0;
                         while($i<$tot){
                           $nres = $res->data_seek($i);
@@ -65,10 +65,10 @@ include("{$dir}modelPage/firstPart.php");
                       ?>
                       <tr data-id="row<?=$row['id']?>" id="row<?=$row['id']?>">
                         <td data-field="id" ><?=$row['id']?></td>
-                        <td data-field="userId" ><?=$row['userId']?></td>
+                        <td data-field="userId" ><?=$row['userName']." ".$row['userLastName']?></td>
                         <td data-field="name" ><?=$row['name']?></td>
                         <td data-field="description" ><?=$row['description']?></td>
-                        <td data-field="state" ><?=$row['state']?></td>
+                        <td data-field="state" ><?=$row['stateName']?></td>
                         <td data-field="dateCreated" ><?=$row['dateCreated']?></td>
                         <td style="text-align: center;">
                           <!-- <a style="padding-right: 15px;" href="<?=$dir_?>categories/add.php?id=<?=$row['idCat']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
