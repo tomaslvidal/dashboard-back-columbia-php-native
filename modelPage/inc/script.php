@@ -40,7 +40,7 @@
 
         $.ajax({
           method: "POST",
-          url: "<?=$dir_?>querySelect.php",
+          url: "<?=$dir_?>selectQuery.php",
           dataType: "json",
           data: dataAjax,
           async: false
@@ -52,7 +52,7 @@
             result = result.data;
 
             for(var i = 0; i < result.length; i++){
-              arrayJSON[(result[i].id)] = result[i].name;
+              arrayJSON[result[i].id] = result[i].name;
             }
           }
 
@@ -125,7 +125,7 @@
   function deleteQuick(id=""){
     let view = $('#view').val();
 
-    let url = '<?=$dir_?>deleteQuick.php';
+    let url = '<?=$dir_?>deleteQuery.php';
 
     if((view=="users" || view=="companies" || view=="packages" || view=="subCategorias" || view=="categorias") && id!=""){
       $.ajax({
