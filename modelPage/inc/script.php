@@ -40,7 +40,7 @@
   function ajaxSelect(){
     let table = $('.dataTable'), arrayForTableedit = [], arrayTemp;
 
-    table.find('thead').find('th').filter('[data-which]').each(function(i){
+    table.find('thead').find('th').filter('[data-which]').not('[data-state=off]').each(function(i){
       let position = $(this).index(), which = $(this).attr('data-which'), where = $(this).attr('data-where'), type = $(this).is('[data-where]').toString();
 
       if(type!="true"){
@@ -145,34 +145,31 @@
 
     let url = '<?=$dir_?>deleteQuery.php';
 
-    if((view=="users" || view=="companies" || view=="packages" || view=="subCategorias" || view=="categorias") && id!=""){
-      $.ajax({
-        method: "POST",
-        url: url,
-        dataType: "json",
-        data: { id: id, view: view }
-      })
-      .done(function(result) {
-        let data = result.success;
+    $.ajax({
+      method: "POST",
+      url: url,
+      dataType: "json",
+      data: { id: id, view: view }
+    })
+    .done(function(result) {
+      let data = result.success;
 
-        if(data == true){
-          let dataTable = $('.dataTable').DataTable();
+      if(data == true){
+        let dataTable = $('.dataTable').DataTable();
 
-          let trRow = "#row"+id, row = dataTable.row($(trRow));
+        let trRow = "#row"+id, row = dataTable.row($(trRow));
 
-          row.remove();
+        row.remove();
 
-          $(trRow).remove();
-        }
-        else if(data == false){
-        }
-      })
-      .fail(function(){
-      })
-      .always(function(){
-      });
-    }
-
+        $(trRow).remove();
+      }
+      else if(data == false){
+      }
+    })
+    .fail(function(){
+    })
+    .always(function(){
+    });
   }
 
   function editTDHTML(field, name, value, type, options="", getEtiquette=""){
@@ -254,19 +251,7 @@
     };
   }
 
-  function dataTableEditPART2(result=""){
-    let arrayJSON = {}, statusInitEdit = $("#statusInit").val(), arrayEditable = [];
-
-    if(result.length!=0){
-      result = result.data;
-
-      for(var i = 0; i < result.length; i++){
-        arrayJSON[(result[i].id)] = result[i].name;
-      }
-    }
-
-    arrayEditable = result.length==0 ? [[1, 'category']] : [[1, 'subCategory'],[2, 'category', JSON.stringify(arrayJSON)]];
-
+  function dataTableEdit(){
     $('.dataTable').Tabledit({
       url: '<?=$dir_?>editQuery.php',
       method: 'three',
@@ -310,33 +295,6 @@
     widthFixed();
   }
 
-  function dataTableEdit(){
-    let where = $('#view').val();
-
-    if(where=="categorias" || where=="subCategorias"){
-      if(where=="subCategorias"){
-        let url = '<?=$dir_?>subcategories/query.php';
-
-        $.ajax({
-          method: "POST",
-          url: url,
-          dataType: "json",
-          data: { init: "success" }
-        })
-        .done(function(result){
-          dataTableEditPART2(result);
-        })
-        .fail(function(){
-        })
-        .always(function(){
-        });
-      }
-      else if(where=="categorias"){
-        dataTableEditPART2();
-      }
-    }
-  }
-
   $(document).ready(function(){
     ajaxSelect();
 
@@ -370,11 +328,21 @@
 
         $.ajax({
           method: "GET",
-          url: "<?=$dir_?>"+where+"/add.php?"+$('.formValidate').serialize(),
+          url: "<?=$dir_?>"+where+"/add.php?"+$('.formValidate').serialize()+"&view="+$('#view').val(),
           dataType: "json",
           // data: data_
         })
         .done(function(result){
+
+          let thsEnables, orderThs
+
+          thsEnables = $('.dataTable').find('thead').find('th').filter('[data-which]');
+
+          orderThs = {};
+
+          thsEnables.each(function(i){
+            orderThs[$(this).attr('data-which')] = i;
+          });
 
           if(result.success == true){
             let data = result.data, html = '<i class="fa fa-check" aria-hidden="true" style="color: #16a085"></i>', tdLast = "";
@@ -387,7 +355,7 @@
 
             let t = $('.dataTable').DataTable(), keys = Object.keys(data), arrayForRow = [], arrayForAttributesRow = [], dataOne;
 
-            for (var i = 0; i < keys.length; i++) {
+            for(var i=0;i<keys.length;i++){
               dataOne = data[keys[i]];
 
               let options = dataOne.options == undefined ? '' : dataOne.options;
@@ -395,18 +363,27 @@
               if(dataOne.type=="input" || dataOne.type=="identifier"){
                 let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
 
-                arrayForRow.push(addTD[0]);
+                console.log(keys[i]+": ", addTD[0]);
 
-                arrayForAttributesRow.push(addTD[1]);
+                arrayForRow[orderThs[keys[i]]] = addTD[0];
+
+                arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
               }
               else if(dataOne.type=="select"){
                 let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
 
-                arrayForRow.push(addTD[0]);
+                console.log(keys[i]+": ", addTD[0]);
 
-                arrayForAttributesRow.push(addTD[1]);
+                arrayForRow[orderThs[keys[i]]] = addTD[0];
+
+                arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
+              }
+              else if(dataOne.type=="text"){
+                arrayForRow[orderThs[keys[i]]] = dataOne.name;
               }
             }
+
+            console.log("arrayForRow: ", arrayForRow);
 
             arrayForRow.push(tdLast);
 

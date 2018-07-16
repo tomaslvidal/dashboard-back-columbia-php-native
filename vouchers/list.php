@@ -15,7 +15,7 @@ include("{$dir}modelPage/firstPart.php");
     include("{$dir}modelPage/parts/navbar.php");
   ?>
     <div class="container-fluid">
-      <input type="hidden" id="view" name="view" value="categorias"/>
+      <input type="hidden" id="view" name="view" value="vouchers"/>
 
       <!-- <input type="hidden" name="statusInit" id="statusInit" value="false"/> -->
 
@@ -34,12 +34,12 @@ include("{$dir}modelPage/firstPart.php");
                   <table class="table table-bordered dataTable" data-view="vouchers" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                       <tr>
-                        <th scope="col">ID</th>
+                        <th scope="col" data-which="id" data-state="off">ID</th>
                         <th scope="col" data-which="userId" data-where="users">Usuario</th>
                         <th scope="col" data-which="name">Nombre</th>
                         <th scope="col" data-which="description">Descripcion</th>
                         <th scope="col" data-which="stateId" data-where="states">Estado</th>
-                        <th scope="col">Fecha de creación</th>
+                        <th scope="col" data-which="dateCreated" data-state="off">Fecha de creación</th>
                         <th scope="col"><div style="display: block; width: 60px; height: 2px"></div></th>
                       </tr>
                     </thead>
@@ -72,7 +72,7 @@ include("{$dir}modelPage/firstPart.php");
                         <td data-field="dateCreated" ><?=$row['dateCreated']?></td>
                         <td style="text-align: center;">
                           <!-- <a style="padding-right: 15px;" href="<?=$dir_?>categories/add.php?id=<?=$row['idCat']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
-                          <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['idCat']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                          <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['id']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
                         </td>
                       </tr>
                       <?
@@ -131,7 +131,7 @@ include("{$dir}modelPage/firstPart.php");
                     <div class="row styleRow">
                       <label for="userId">Usuario</label>
 
-                      <input type="text" class="form-control" name="userId_" value="" id="userId" placeholder="" required="">
+                      <input type="text" class="form-control" name="userId" value="" id="userId" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
                     </div>
@@ -139,7 +139,7 @@ include("{$dir}modelPage/firstPart.php");
                     <div class="row styleRow">
                       <label for="name">Nombre</label>
                       
-                      <input type="text" class="form-control" name="name_" value="" id="name" placeholder="" required="">
+                      <input type="text" class="form-control" name="name" value="" id="name" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
                     </div>
@@ -147,15 +147,7 @@ include("{$dir}modelPage/firstPart.php");
                     <div class="row styleRow">
                       <label for="description">Descripción</label>
                       
-                      <input type="text" class="form-control" name="description_" value="" id="description" placeholder="" required="">
-
-                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
-                    </div>
-
-                    <div class="row styleRow">
-                      <label for="stateId">Estado</label>
-                      
-                      <input type="text" class="form-control" name="stateId_" value="" id="stateId" placeholder="" required="">
+                      <input type="text" class="form-control" name="description" value="" id="description" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
                     </div>

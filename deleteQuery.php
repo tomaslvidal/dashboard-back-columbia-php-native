@@ -11,25 +11,11 @@ $id = $_POST['id'];
 
 $view = $_POST['view'];
 
-$columnIdName = "id";
+$query = "delete from {$view} where id='{$id}'";
 
-if($view=="subCategorias"){
-	$columnIdName = "idSubcat";
-}
-elseif($view=="categorias"){
-	$columnIdName = "idCat";
-}
+db_query(0, $query);
 
-if ($view == "packages" || $view == "companies" || $view == "users" || $view == "subCategorias" || $view == "categorias"){
-	$query = "delete from {$view} where {$columnIdName}='{$id}'";
-
-	db_query(0, $query);
-
-	$jsondata["success"] = true;
-}
-else {
-	$jsondata["success"] = false;
-}
+$jsondata["success"] = true;
 
 header('Content-type: application/json; charset=utf-8');
 
