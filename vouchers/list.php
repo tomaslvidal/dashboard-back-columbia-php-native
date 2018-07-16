@@ -34,13 +34,13 @@ include("{$dir}modelPage/firstPart.php");
                   <table class="table table-bordered dataTable" data-view="vouchers" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                       <tr>
-                        <th>ID</th>
-                        <th data-which="userId" data-where="users">Usuario</th>
-                        <th data-which="name">Nombre</th>
-                        <th data-which="description">Descripcion</th>
-                        <th data-which="state" data-where="states">Estado</th>
-                        <th>Fecha de creación</th>
-                        <th><div style="display: block; width: 60px; height: 2px"></div></th>
+                        <th scope="col">ID</th>
+                        <th scope="col" data-which="userId" data-where="users">Usuario</th>
+                        <th scope="col" data-which="name">Nombre</th>
+                        <th scope="col" data-which="description">Descripcion</th>
+                        <th scope="col" data-which="stateId" data-where="states">Estado</th>
+                        <th scope="col">Fecha de creación</th>
+                        <th scope="col"><div style="display: block; width: 60px; height: 2px"></div></th>
                       </tr>
                     </thead>
                     <tfoot>
@@ -56,7 +56,7 @@ include("{$dir}modelPage/firstPart.php");
                     </tfoot>
                     <tbody>
                       <?
-                        db_query(0,'select vouchers.*, states.name as stateName, users.id as userId, users.name as userName, users.lastName as userLastName from vouchers join users on vouchers.userId = users.id join states on vouchers.state = states.id');
+                        db_query(0,'select vouchers.*, states.name as stateName, users.id as userId, users.name as userName, users.lastName as userLastName from vouchers join users on vouchers.userId = users.id join states on vouchers.stateId = states.id');
                         $i=0;
                         while($i<$tot){
                           $nres = $res->data_seek($i);
@@ -68,7 +68,7 @@ include("{$dir}modelPage/firstPart.php");
                         <td data-field="userId" ><?=$row['userName']." ".$row['userLastName']?></td>
                         <td data-field="name" ><?=$row['name']?></td>
                         <td data-field="description" ><?=$row['description']?></td>
-                        <td data-field="state" ><?=$row['stateName']?></td>
+                        <td data-field="stateId" ><?=$row['stateName']?></td>
                         <td data-field="dateCreated" ><?=$row['dateCreated']?></td>
                         <td style="text-align: center;">
                           <!-- <a style="padding-right: 15px;" href="<?=$dir_?>categories/add.php?id=<?=$row['idCat']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
@@ -153,9 +153,9 @@ include("{$dir}modelPage/firstPart.php");
                     </div>
 
                     <div class="row styleRow">
-                      <label for="state">Estado</label>
+                      <label for="stateId">Estado</label>
                       
-                      <input type="text" class="form-control" name="state_" value="" id="state" placeholder="" required="">
+                      <input type="text" class="form-control" name="stateId_" value="" id="stateId" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
                     </div>

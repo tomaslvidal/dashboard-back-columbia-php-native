@@ -9,21 +9,48 @@ $jsondata = array();
 
 $jsondata["data"] = array();
 
+if(substr($_POST['name'], -2)=="Id"){
+  $select = "true";
+}
+else{
+  $select = "false";
+}
+
 if(!empty($_POST['name'])){
   db_update("UPDATE {$_POST['view']} SET {$_POST['name']}='{$_POST['value']}' WHERE id='{$_POST['id']}'");
 
-  db_query(0,"SELECT * FROM {$_POST['view']} where id='".$_POST['id']."'");
-
   if(!empty($_POST['name'])){
-    $jsondata["data"] = array_merge($jsondata["data"], array(
-      "{$_POST['name']}" => array(
-        "name" => $row['name'],
-        "id" => $_POST['id'],
-        "value" => $row['id'],
-        "type" => 'input'
+    if($select == "true"){
+      db_query(0,"SELECT * FROM ".substr($_POST['name'], 0, -2)."s"." where id='".$_POST['value']."'");
+
+      db_query(2, "select * from ".substr($_POST['name'], 0, -2)."s");
+
+      $options = array();
+
+      for ($i=0;$i<$tot2;$i++){
+        $nres2 = $res2->data_seek($i);
+        
+        $row2 = $res2->fetch_assoc();
+
+        array_push($options, array(
+          "name" => (isset($row2['lastName']) ? $row2['name']." ".$row2['lastName'] : $row2['name']),
+          "value" => $row2['id']
+        ));
+      }
+    }
+
+    $jsondata["data"] = array(
+      $_POST['name'] => array(
+        "name" => $select == "true" ? (isset($row['lastName']) ? $row['name']." ".$row['lastName'] : $row['name']) : $_POST['value'],
+        "value" => $select == "true" ? $_POST['value'] : $_POST['id'],
+        "type" => $select == "true" ? 'select' : 'input'
       )
-    ));
+    );
+
+    $jsondata["data"][$_POST['name']]["options"] = $options;
   }
+
+  $jsondata["id"] = $_POST['id'];
 
   $jsondata["success"] = true;
 }

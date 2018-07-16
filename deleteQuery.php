@@ -20,7 +20,6 @@ elseif($view=="categorias"){
 	$columnIdName = "idCat";
 }
 
-
 if ($view == "packages" || $view == "companies" || $view == "users" || $view == "subCategorias" || $view == "categorias"){
 	$query = "delete from {$view} where {$columnIdName}='{$id}'";
 

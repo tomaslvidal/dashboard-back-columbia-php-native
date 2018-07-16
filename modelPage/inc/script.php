@@ -10,6 +10,10 @@
 
 <script src="<?=$dir_?>modelPage/js/all.js?v=<?=filemtime("{$dir}modelPage/js/all.js")?>"></script>
 
+<script src="<?=$dir_?>modelPage/js/datatables.min.js?v=<?=filemtime("{$dir}modelPage/js/datatables.min.js")?>"></script>
+
+<script src="<?=$dir_?>modelPage/js/sb-admin-datatables.min.js?v=<?=filemtime("{$dir}modelPage/js/sb-admin-datatables.min.js")?>"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-confirmation2/dist/bootstrap-confirmation.min.js"></script>
@@ -19,6 +23,20 @@
 <script src="<?=$dir_?>modelPage/js/sb-admin.min.js?v=<?=filemtime("{$dir}modelPage/js/sb-admin.min.js")?>"></script>
 
 <script>
+  function widthFixed(){
+      let tables = $('.dataTable');
+
+      tables.each(function(i){
+        let table = $(this), thead = table.find('thead'), ths = thead.find('th[scope=col]');
+
+        ths.each(function(d){
+          let th = $(this), widthTh = th.width();
+
+          th.attr('style', "width:"+widthTh+"px!important");
+        });
+      });
+  }
+
   function ajaxSelect(){
     let table = $('.dataTable'), arrayForTableedit = [], arrayTemp;
 
@@ -282,13 +300,14 @@
 
           let tdEdit = $(trRow).children("td[data-field='"+dataKeys[i]+"']");
 
-          // dataTable.cell( tdEdit ).data(addTD);
           dataTable.cell( tdEdit ).data(dataPosition.name);
 
           tdEdit.html(addTD);
         }
       }
     });
+
+    widthFixed();
   }
 
   function dataTableEdit(){
