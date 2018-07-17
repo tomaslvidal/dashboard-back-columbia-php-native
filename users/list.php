@@ -16,7 +16,9 @@ include("{$dir}modelPage/firstPart.php");
   ?>
     <div class="container-fluid">
       <input type="hidden" id="view" name="view" value="users"/>
+
       <!-- <input type="hidden" name="statusInit" id="statusInit" value="false"/> -->
+
       <input type="hidden" name="statusMouseOver" id="statusMouseOver" value="false"/>
       <?
       echo(breadcrumbName('Usuarios','Listado'));
@@ -29,18 +31,18 @@ include("{$dir}modelPage/firstPart.php");
             <div class="card-body row">
               <div class="col-lg-8">
                 <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" data-view="users" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>ID</th>
-                      <th>Usuario</th>
-                      <th>Contraseña</th>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th>Email</th>
-                      <th>Teléfono</th>
-                      <th>Fecha Creacion</th>
-                      <th><div style="display: block; width: 60px; height: 2px"></div></th>
+                      <th scope="col" data-which="id" data-state="off">ID</th>
+                      <th scope="col" data-which="user">Usuario</th>
+                      <th scope="col" data-which="password">Contraseña</th>
+                      <th scope="col" data-which="name">Nombre</th>
+                      <th scope="col" data-which="lastName">Apellido</th>
+                      <th scope="col" data-which="email">Email</th>
+                      <th scope="col" data-which="telephone">Teléfono</th>
+                      <th scope="col" data-which="dateCreated" data-state="off">Fecha Creacion</th>
+                      <th scope="col"><div style="display: block; width: 60px; height: 2px"></div></th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -58,7 +60,7 @@ include("{$dir}modelPage/firstPart.php");
                   </tfoot>
                   <tbody>
                     <?
-                      db_query(0,'select * from users');
+                      db_query(0,'select users.*, states.id as stateId, states.name as stateName from users join states on users.stateId = states.id');
                       $i=0;
                       while($i<$tot)
                       {
@@ -88,80 +90,109 @@ include("{$dir}modelPage/firstPart.php");
               </div>
               </div>
               <style>
-              #iconLoading{
-                display: none;
-                align-self: center;
-                margin-left: 8px;
-                color: #16a085;
-              }
+                #iconLoading{
+                    display: none;
+                    align-self: center;
+                    margin-left: 8px;
+                    color: #16a085;
+                  }
+
+                .borderStyle2{
+                  border-width: 2px 1px 2px 1px;
+                  border-style: solid;
+                }
+
+                .borderStyle{
+                  border-width: 0px 1px 0px 1px;
+                  border-style: solid;
+                }
+
+                .borderColor{
+                  border-color: #dee2e6;
+                }
               </style>
+              
               <div class="col-lg-4">
-                <!-- <div style="height: 39px">
-                </div> -->
-                <div class="col-12" style="/*margin-top: 6px;*/border: 2px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
+                <div style="height: 39px">
+                </div>
+
+                <div class="col-12 borderStyle2 borderColor" style="margin-top: 6px">
                   <div style="height: 48px;display: flex;align-items: center;padding-bottom: 2px;">
-                    <h4 class="m-0">Agregar
-                      <!-- <span class="badge badge-secondary" style="background-color: #007bff;font-size: 45%;">New</span> -->
+                    <h4 class="m-0">
+                      Agregar
                     </h4>
                   </div>
                 </div>
-                <div class="card-footer small text-muted" style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;"></div>
-                <div class="col-12" style="border: 2px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6; border-top: 0px;">
+
+                <div class="card-footer small text-muted borderStyle borderColor"></div>
+
+                <style>
+                  .styleRow{
+                    padding: 20px;
+                    padding-top: 8px; 
+                    padding-bottom: 10px
+                  }
+                </style>
+
+                <div class="col-12 borderStyle2 borderColor" style="border-top: 0px;">
                   <form class="formValidate needs-validation" novalidate>
-                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                    <div class="row styleRow">
                       <label for="name">Nombre</label>
 
-                      <input type="text" class="form-control" name="name_" value="" id="name" placeholder="" required="">
+                      <input type="text" class="form-control" name="name" value="" id="name" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
                     </div>
 
-                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                    <div class="row styleRow">
                       <label for="lastName">Apellido</label>
 
-                      <input type="text" class="form-control" name="lastName_" value="" id="lastName" placeholder="" required="">
+                      <input type="text" class="form-control" name="lastName" value="" id="lastName" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
                     </div>
 
-                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                    <div class="row styleRow">
                       <label for="user">Usuario</label>
 
-                      <input type="text" class="form-control" name="user_" value="" id="user" placeholder="" required="">
+                      <input type="text" class="form-control" name="user" value="" id="user" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el usuario</small> -->
                     </div>
 
-                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                    <div class="row styleRow">
                       <label for="password">Contraseña</label>
 
-                      <input type="text" class="form-control" name="password_" value="" id="password" placeholder="" required="">
+                      <input type="text" class="form-control" name="password" value="" id="password" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
                     </div>
 
-                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                    <div class="row styleRow">
                       <label for="email">Email</label>
 
-                      <input type="text" class="form-control" name="email_" value="" id="email" placeholder="" required="">
+                      <input type="text" class="form-control" name="email" value="" id="email" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
                     </div>
 
-                    <div class="row" style="padding: 20px;padding-top: 8px; padding-bottom: 10px">
+                    <div class="row styleRow">
                       <label for="telephone">Teléfono</label>
 
-                      <input type="text" class="form-control" name="telephone_" value="" id="telephone" placeholder="" required="">
+                      <input type="text" class="form-control" name="telephone" value="" id="telephone" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
                     </div>
                   </form>
-                  <div class="row" style="padding: 20px; padding-top: 8px; padding-bottom: 20px">
+
+                  <div class="row styleRow" style="padding-bottom: 20px">
                     <div style="display: flex; flex: 1; padding-left: 5px;">
                       <div id="addItem" style="display: flex; align-items: center; cursor: pointer;">
                         <i class="fa fa-plus-circle" aria-hidden="true" style="font-size: 20px; color: #16a085; margin-right: 4px;"></i>
+
                         <span>Agregar</span>
                       </div>
+
                       <div id="iconLoading">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                       </div>

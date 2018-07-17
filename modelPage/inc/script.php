@@ -328,13 +328,12 @@
 
         $.ajax({
           method: "GET",
-          url: "<?=$dir_?>"+where+"/add.php?"+$('.formValidate').serialize()+"&view="+$('#view').val(),
+          url: "<?=$dir_?>"+"/addQuery.php?"+$('.formValidate').serialize()+"&view="+$('#view').val(),
           dataType: "json",
           // data: data_
         })
         .done(function(result){
-
-          let thsEnables, orderThs
+          let thsEnables, orderThs;
 
           thsEnables = $('.dataTable').find('thead').find('th').filter('[data-which]');
 
@@ -361,29 +360,29 @@
               let options = dataOne.options == undefined ? '' : dataOne.options;
 
               if(dataOne.type=="input" || dataOne.type=="identifier"){
-                let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
+                if(orderThs[keys[i]]!=undefined){
+                  let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
 
-                console.log(keys[i]+": ", addTD[0]);
+                  arrayForRow[orderThs[keys[i]]] = addTD[0];
 
-                arrayForRow[orderThs[keys[i]]] = addTD[0];
-
-                arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
+                  arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
+                }
               }
               else if(dataOne.type=="select"){
-                let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
+                if(orderThs[keys[i]]!=undefined){
+                  let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
 
-                console.log(keys[i]+": ", addTD[0]);
+                  arrayForRow[orderThs[keys[i]]] = addTD[0];
 
-                arrayForRow[orderThs[keys[i]]] = addTD[0];
-
-                arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
+                  arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
+                }
               }
               else if(dataOne.type=="text"){
-                arrayForRow[orderThs[keys[i]]] = dataOne.name;
+                if(orderThs[keys[i]]!=undefined){
+                  arrayForRow[orderThs[keys[i]]] = dataOne.name;
+                }
               }
             }
-
-            console.log("arrayForRow: ", arrayForRow);
 
             arrayForRow.push(tdLast);
 

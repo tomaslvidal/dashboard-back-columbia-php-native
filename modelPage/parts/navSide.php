@@ -16,22 +16,12 @@
       </a>
     </li>
 
-    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Vouchers">
-      <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePackages">
-        <i class="fa fa-archive"></i>
+    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="" data-original-title="Vouchers">
+      <a class="nav-link" href="<?=$dir_?>vouchers/list.php">
+        <i class="fa fa-window-maximize"></i>
 
         <span class="nav-link-text">Vouchers</span>
       </a>
-
-      <ul class="sidenav-second-level collapse" id="collapsePackages">
-        <li>
-          <a href="<?=$dir_?>vouchers/list.php">Listado</a>
-        </li>
-        
-        <li>
-          <a href="<?=$dir_?>vouchers/add.php">Agregar</a>
-        </li>
-      </ul>
     </li>
   </ul>
 

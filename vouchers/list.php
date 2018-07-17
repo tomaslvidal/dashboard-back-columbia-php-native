@@ -108,7 +108,10 @@ include("{$dir}modelPage/firstPart.php");
               </style>
 
               <div class="col-lg-4">
-                <div class="col-12 borderStyle2 borderColor">
+                <div style="height: 39px">
+                </div>
+
+                <div class="col-12 borderStyle2 borderColor" style="margin-top: 6px">
                   <div style="height: 48px;display: flex;align-items: center;padding-bottom: 2px;">
                     <h4 class="m-0">
                       Agregar
