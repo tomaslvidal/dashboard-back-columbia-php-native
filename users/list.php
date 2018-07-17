@@ -36,11 +36,12 @@ include("{$dir}modelPage/firstPart.php");
                     <tr>
                       <th scope="col" data-which="id" data-state="off">ID</th>
                       <th scope="col" data-which="user">Usuario</th>
-                      <th scope="col" data-which="password">Contraseña</th>
+                      <th scope="col" data-which="password" data-state="off">Contraseña</th>
                       <th scope="col" data-which="name">Nombre</th>
                       <th scope="col" data-which="lastName">Apellido</th>
                       <th scope="col" data-which="email">Email</th>
                       <th scope="col" data-which="telephone">Teléfono</th>
+                      <th scope="col" data-which="stateId" data-where="states">Estado</th>
                       <th scope="col" data-which="dateCreated" data-state="off">Fecha Creacion</th>
                       <th scope="col"><div style="display: block; width: 60px; height: 2px"></div></th>
                     </tr>
@@ -54,6 +55,7 @@ include("{$dir}modelPage/firstPart.php");
                       <th>Apellido</th>
                       <th>Email</th>
                       <th>Teléfono</th>
+                      <th>Estado</th>
                       <th>Fecha Creacion</th>
                       <th><div style="display: block; width: 60px; height: 2px"></div></th>
                     </tr>
@@ -70,11 +72,12 @@ include("{$dir}modelPage/firstPart.php");
                     <tr data-id="row<?=$row['id']?>" id="row<?=$row['id']?>">
                       <td data-field="id"><?=$row['id']?></td>
                       <td data-field="user" ><?=$row['user']?></td>
-                      <td data-field="password" ><?=$row['password']?></td>
+                      <td data-field="password" ><?=$row['password']?><!-- ******** --></td>
                       <td data-field="name" ><?=$row['name']?></td>
                       <td data-field="lastName" ><?=$row['lastName']?></td>
                       <td data-field="email" ><?=$row['email']?></td>
                       <td data-field="telephone" ><?=$row['telephone']?></td>
+                      <td data-field="stateId" ><?=$row['stateName']?></td>
                       <td style="text-align: center;"><?=$row['dateCreated']?></td>
                       <td style="text-align: center;">
                         <!-- <a style="padding-right: 15px;" href="<?=$dir_?>categories/add.php?id=<?=$row['id']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
@@ -163,7 +166,7 @@ include("{$dir}modelPage/firstPart.php");
                     <div class="row styleRow">
                       <label for="password">Contraseña</label>
 
-                      <input type="text" class="form-control" name="password" value="" id="password" placeholder="" required="">
+                      <input type="password" class="form-control" name="password" value="" id="password" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
                     </div>
@@ -171,7 +174,7 @@ include("{$dir}modelPage/firstPart.php");
                     <div class="row styleRow">
                       <label for="email">Email</label>
 
-                      <input type="text" class="form-control" name="email" value="" id="email" placeholder="" required="">
+                      <input type="email" class="form-control" name="email" value="" id="email" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
                     </div>
@@ -179,9 +182,31 @@ include("{$dir}modelPage/firstPart.php");
                     <div class="row styleRow">
                       <label for="telephone">Teléfono</label>
 
-                      <input type="text" class="form-control" name="telephone" value="" id="telephone" placeholder="" required="">
+                      <input type="tel" class="form-control" name="telephone" value="" id="telephone" placeholder="" required="">
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre del usuario</small> -->
+                    </div>
+
+                    <div class="row styleRow">
+                      <label for="stateId">Estado</label>
+
+                      <select class="custom-select" name="stateId" id="stateId">
+                      <?
+                        db_query(0, "select * from states order by name DESC");
+
+                        for($d=0;$d<$tot;$d++){
+                          $nres = $res->data_seek($d);
+      
+                          $row = $res->fetch_assoc(); 
+                        
+                      ?>
+                          <option value="<?=$row['id']?>"><?=!isset($row['lastName']) ? $row['name'] : $row['name']." ".$row['lastName']?></option>
+                      <?
+                        }
+                      ?>
+                      </select>
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
                     </div>
                   </form>
 

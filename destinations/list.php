@@ -151,6 +151,28 @@ include("{$dir}modelPage/firstPart.php");
                       
                       <!-- <small id="description" class="form-text text-muted">Escribe el titulo del destino</small> -->
                     </div>
+
+                    <div class="row styleRow">
+                      <label for="stateId">Estado</label>
+
+                      <select class="custom-select" name="stateId" id="stateId">
+                      <?
+                        db_query(0, "select * from states order by name DESC");
+
+                        for($d=0;$d<$tot;$d++){
+                          $nres = $res->data_seek($d);
+      
+                          $row = $res->fetch_assoc(); 
+                        
+                      ?>
+                          <option value="<?=$row['id']?>"><?=!isset($row['lastName']) ? $row['name'] : $row['name']." ".$row['lastName']?></option>
+                      <?
+                        }
+                      ?>
+                      </select>
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
+                    </div>
                   </form>
 
                   <div class="row styleRow" style="padding: 20px!important">

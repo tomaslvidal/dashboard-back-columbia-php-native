@@ -134,7 +134,21 @@ include("{$dir}modelPage/firstPart.php");
                     <div class="row styleRow">
                       <label for="userId">Usuario</label>
 
-                      <input type="text" class="form-control" name="userId" value="" id="userId" placeholder="" required="">
+                      <select class="custom-select" name="userId" id="userId">
+                      <?
+                        db_query(0, "select * from users");
+
+                        for($i=0;$i<$tot;$i++){
+                          $nres = $res->data_seek($i);
+      
+                          $row = $res->fetch_assoc(); 
+                        
+                      ?>
+                          <option value="<?=$row['id']?>"><?=!isset($row['lastName']) ? $row['name'] : $row['name']." ".$row['lastName']?></option>
+                      <?
+                        }
+                      ?>
+                      </select>
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
                     </div>
@@ -151,6 +165,28 @@ include("{$dir}modelPage/firstPart.php");
                       <label for="description">Descripción</label>
                       
                       <input type="text" class="form-control" name="description" value="" id="description" placeholder="" required="">
+
+                      <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
+                    </div>
+
+                    <div class="row styleRow">
+                      <label for="stateId">Estado</label>
+
+                      <select class="custom-select" name="stateId" id="stateId">
+                      <?
+                        db_query(0, "select * from states order by name DESC");
+
+                        for($d=0;$d<$tot;$d++){
+                          $nres = $res->data_seek($d);
+      
+                          $row = $res->fetch_assoc(); 
+                        
+                      ?>
+                          <option value="<?=$row['id']?>"><?=!isset($row['lastName']) ? $row['name'] : $row['name']." ".$row['lastName']?></option>
+                      <?
+                        }
+                      ?>
+                      </select>
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
                     </div>
