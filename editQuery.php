@@ -47,7 +47,9 @@ if(!empty($_POST['name'])){
       )
     );
 
-    $jsondata["data"][$_POST['name']]["options"] = $options;
+    if($select == "true"){
+      $jsondata["data"][$_POST['name']]["options"] = $options;
+    }
   }
 
   $jsondata["id"] = $_POST['id'];
