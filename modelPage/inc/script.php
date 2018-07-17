@@ -102,44 +102,6 @@
     dataTableEdit();
   }
 
-  function optionsSubCat(val = "", subCategory = ""){
-    let url = '<?=$dir_?>packages/query.php';
-    
-    let id_ = val, html = "", dataAjax={};
-
-    if((id_.toString()).length>0){
-      dataAjax={
-        "init" : "success",
-        "id" : id_
-      };
-    }
-    else{
-      dataAjax={
-        "init" : "success"
-      };
-    }
-
-    $.ajax({
-      method: "POST",
-      url: url,
-      dataType: "json",
-      data: dataAjax
-    })
-    .done(function(result){
-      let data = result.data;
-
-      for (var i = 0; i < data.length; i++){
-        html+=`<option value="${data[i].id}"`+( (subCategory.length>0 && subCategory==data[i].id) ? 'selected' : '')+`>${data[i].name}</option>`;
-      }
-
-      $('#idSubcat').html(html);
-    })
-    .fail(function(){
-    })
-    .always(function(){
-    });
-  }
-
   function deleteQuick(id=""){
     let view = $('#view').val();
 
@@ -149,7 +111,7 @@
       method: "POST",
       url: url,
       dataType: "json",
-      data: { id: id, view: view }
+      data: { id: id, view: view },
     })
     .done(function(result) {
       let data = result.success;
@@ -166,7 +128,10 @@
       else if(data == false){
       }
     })
-    .fail(function(){
+    .fail(function(fail){
+      fail = fail.responseText;
+      
+      console.log("fail: ", fail);
     })
     .always(function(){
     });

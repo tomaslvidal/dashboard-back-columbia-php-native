@@ -36,7 +36,7 @@ include("{$dir}modelPage/firstPart.php");
                     <tr>
                       <th scope="col" data-which="id" data-state="off">ID</th>
                       <th scope="col" data-which="user">Usuario</th>
-                      <th scope="col" data-which="password" data-state="off">Contraseña</th>
+                      <th scope="col" data-which="password">Contraseña</th>
                       <th scope="col" data-which="name">Nombre</th>
                       <th scope="col" data-which="lastName">Apellido</th>
                       <th scope="col" data-which="email">Email</th>

@@ -43,7 +43,7 @@ function db_query($i,$param){
 
 	${'res'.$i}=$connect->query($param);
 
-	if(!${'res'.$i}) {handle_error($connect->error);}
+	if(!${'res'.$i}) {handle_error($connect->errno);}
 
 	${'tot'.$i}=${'res'.$i}->num_rows;
 
@@ -128,7 +128,9 @@ function cleanVar($param){
 function handle_error($perror){
 	//mail("nbellosi@aptek.com.ar","Error en DB","Ocurrio el error: ".$perror,"");
 	
-	die("<b>Database Error:</b> ".$perror);
+	header("HTTP/1.0 404 Not Found");
+	
+	die((string)$perror);
 }
 
 function vacioGuion($valor){
