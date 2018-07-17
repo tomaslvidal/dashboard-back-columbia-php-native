@@ -9,7 +9,7 @@ $jsondata = array();
 
 $jsondata["data"] = array();
 
-$_POST = $_REQUEST;
+$_POST = $_GET;
 
 $_POST['stateId'] = 1;
 
@@ -27,7 +27,7 @@ for($r=0;$r<$tot;$r++){
   $columnsOfTable[$r] = $row['COLUMN_NAME'];
 }
 
-unset($_POST['PHPSESSID']); unset($_POST['view']);
+unset($_POST['view']);
 
 /////////////
 $keysPOST = array_keys($_POST);
@@ -47,8 +47,13 @@ if($ultimaLetra==","){
 $values = "";
 
 /////////////
-for($d=0;$d<count($_POST);$d++){ 
-  $values.="'".$_POST[$keysPOST[$d]]."'".",";
+for($d=0;$d<count($_POST);$d++){
+  if($_POST[$keysPOST[$d]]!="all"){
+    $values.="'".$_POST[$keysPOST[$d]]."'".",";
+  }
+  else{
+    $values.="null,";
+  }
 }
 
 $ultimaLetra = substr($values, -1);
@@ -63,7 +68,9 @@ for($c=0;$c<count($columnsOfTable);$c++){
   }
 }
 
-db_insert("INSERT INTO ".$view." (".$columns.") VALUES (".$values.")");
+$query = "INSERT INTO ".$view." (".$columns.") VALUES (".$values.")";
+
+db_insert($query);
 
 db_query(0, "SELECT LAST_INSERT_ID()");
 
@@ -90,11 +97,12 @@ if($tot>0){
     }
 
     if($select == "true"){
+      $options = array();
+
       db_query(3,"SELECT * FROM ".substr($keysPOST[$i], 0, -2)."s"." where id='".$_POST[$keysPOST[$i]]."'");
 
       db_query(2, "SELECT * FROM ".substr($keysPOST[$i], 0, -2)."s");
 
-      $options = array();
 
       for($e=0;$e<$tot2;$e++){
         $nres2 = $res2->data_seek($e);
@@ -105,11 +113,18 @@ if($tot>0){
           "name" => (isset($row2['lastName']) ? $row2['name']." ".$row2['lastName'] : $row2['name']),
           "value" => $row2['id']
         ));
+
+        if($_POST[$keysPOST[$i]]=="all"){
+          array_push($options, array(
+            "name" => 'Todos',
+            "value" => 'all'
+          ));
+        }
       }
     }
 
     $jsondata["data"][$keysPOST[$i]] = array(
-      "name" => $select == "true" ? (isset($row3['lastName']) ? $row3['name']." ".$row3['lastName'] : $row3['name']) : $_POST[$keysPOST[$i]],
+      "name" => $select == "true" ? ($_POST[$keysPOST[$i]]!="all" ? (isset($row3['lastName']) ? $row3['name']." ".$row3['lastName'] : $row3['name']) : 'Todos')  : $_POST[$keysPOST[$i]],
       "value" => $select == "true" ? $_POST[$keysPOST[$i]] : $lastID,
       "type" => $select == "true" ? 'select' : 'input'
     );

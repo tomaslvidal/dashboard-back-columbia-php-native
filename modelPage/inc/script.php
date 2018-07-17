@@ -69,6 +69,10 @@
           if(result.length!=0){
             result = result.data;
 
+            if(where=="users"){
+              arrayJSON.all = "Todos";
+            }
+
             for(var i = 0; i < result.length; i++){
               arrayJSON[result[i].id] = result[i].name;
             }
@@ -102,6 +106,26 @@
     dataTableEdit();
   }
 
+  function generateAlert(class_, text){
+    html = "";
+    html += '<div class="alert alert-'+class_+' animated bounceInLeft" role="alert">';
+    html +=   text;
+    html += '</div>';
+
+    // return html;
+    $('.breadcrumb').first().after(html);
+
+    setTimeout(function(){
+      $('.alert').removeClass('animated bounceInLeft');
+
+      $('.alert').addClass('animated bounceOutLeft');
+
+      $(".alert").bind('oanimationend animationend webkitAnimationEnd',function(){
+        $(this).remove();
+      });
+    }, 4000);
+  }
+
   function deleteQuick(id=""){
     let view = $('#view').val();
 
@@ -117,21 +141,45 @@
       let data = result.success;
 
       if(data == true){
-        let dataTable = $('.dataTable').DataTable();
+        let dataTable = $('.dataTable').DataTable(), text;
 
         let trRow = "#row"+id, row = dataTable.row($(trRow));
 
         row.remove();
 
         $(trRow).remove();
+
+        if(view=="users"){
+          text = "El usuario fue eliminado con éxito.";
+        }
+        else if(view=="vouchers"){
+          text = "Voucher eliminado con éxito.";
+        }
+        else if(view=="destinations"){
+          text = "Destino eliminado con éxito.";
+        }
+
+        text!="" ? generateAlert("success", text) : null;
       }
       else if(data == false){
       }
     })
     .fail(function(fail){
       fail = fail.responseText;
-      
-      console.log("fail: ", fail);
+
+      if(fail=="1451"){
+        if(view=="users"){
+          text = "El usuario está siendo utilizado, no es posible eliminarlo.";
+        }
+        else if(view=="vouchers"){
+          text = "El voucher está siendo utilizado, no es posible eliminarlo.";
+        }
+        else if(view=="destinations"){
+          text = "El destino está siendo utilizado, no es posible eliminarlo.";
+        }
+
+        text!="" ? generateAlert("danger", text) : null;
+      }
     })
     .always(function(){
     });
