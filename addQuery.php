@@ -11,7 +11,7 @@ $jsondata["data"] = array();
 
 $_POST = $_GET;
 
-$_POST['stateId'] = 1;
+$_POST['stateId'] = isset($_POST['stateId']) ? $_POST['stateId'] : 1;
 
 $view = $_POST['view'];
 

@@ -107,20 +107,24 @@
   }
 
   function generateAlert(class_, text){
+    let putClass = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
     html = "";
-    html += '<div class="alert alert-'+class_+' animated bounceInLeft" role="alert">';
+    html += '<div class="'+putClass+' alert alert-'+class_+' animated bounceInLeft" role="alert">';
     html +=   text;
     html += '</div>';
 
     // return html;
     $('.breadcrumb').first().after(html);
 
+    let elementAlert = $('.'+putClass);
+
     setTimeout(function(){
-      $('.alert').removeClass('animated bounceInLeft');
+      elementAlert.removeClass('animated bounceInLeft');
 
-      $('.alert').addClass('animated bounceOutLeft');
+      elementAlert.addClass('animated bounceOutLeft');
 
-      $(".alert").bind('oanimationend animationend webkitAnimationEnd',function(){
+      elementAlert.bind('oanimationend animationend webkitAnimationEnd',function(){
         $(this).remove();
       });
     }, 4000);
@@ -227,12 +231,20 @@
         html +='<td data-field="'+field+'" class="tabledit-view-mode" style="cursor: pointer;">';
       }
 
+      let optionsHTML = "", optionHTMLFirst = "";
       html +='  <span class="tabledit-span">'+name+'</span>';
       html +='  <select class="tabledit-input form-control input-sm" name="'+field+'" style="display: none;" disabled="">';
-                for (var i = 0; i < options.length; i++)
-                {
-                  html +='<option value="'+options[i].value+'"'+(options[i].value==value ? 'selected' : '')+'>'+options[i].name+'</option>';
+                for (var i = 0; i < options.length; i++){
+                  if(options[i].value=="all"){
+                    optionHTMLFirst = '<option value="'+options[i].value+'"'+(options[i].value==value ? 'selected' : '')+'>'+options[i].name+'</option>';
+                  }
+                  else{
+                    optionHTMLFirst = '<option value="all">Todos</option>';
+
+                    optionsHTML +='<option value="'+options[i].value+'"'+(options[i].value==value ? 'selected' : '')+'>'+options[i].name+'</option>';
+                  }
                 }
+      html += optionHTMLFirst+optionsHTML;
       html +='  </select>';
 
       if(getEtiquette.length>0){

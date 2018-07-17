@@ -70,7 +70,15 @@ include("{$dir}modelPage/firstPart.php");
                       <td data-field="dateCreated" ><?=$row['dateCreated']?></td>
                       <td style="text-align: center;">
                         <!-- <a style="padding-right: 15px;" href="<?=$dir_?>categories/add.php?id=<?=$row['idCat']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
-                        <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['id']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                        <div class="flexInit">
+                          <div class="flexInit twoCenter">
+                            <i class="modalUpload far fa-images"></i>
+                          </div>
+
+                          <div class="flexInit twoCenter">
+                            <a style="display: flex" href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['id']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                     <?
