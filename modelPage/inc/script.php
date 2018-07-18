@@ -97,7 +97,7 @@
     $('[data-toggle=confirmation]').confirmation({
       rootSelector: '[data-toggle=confirmation]',
       onConfirm: function(){
-        let id = $(this)[0].getAttribute('data-id');
+        let id = $(this).closest('tr').attr('data-id');
         
         deleteQuick(id);
       }
@@ -244,7 +244,7 @@
                     optionsHTML +='<option value="'+options[i].value+'"'+(options[i].value==value ? 'selected' : '')+'>'+options[i].name+'</option>';
                   }
                 }
-      html += optionHTMLFirst+optionsHTML;
+      html += field != "stateId" ? optionHTMLFirst+optionsHTML : optionsHTML;
       html +='  </select>';
 
       if(getEtiquette.length>0){
@@ -276,48 +276,88 @@
     };
   }
 
+  // function lastTD(where, data){
+  //   let icons = "", state = "", tdLast = "";
+
+  //   if(where=="vouchers" || where=="destinations"){
+  //     state = "true";
+
+  //     if(where=="vouchers"){
+  //       icons+= '<div class="flexInit twoCenter">';
+  //         icons+= '<i class="fas fa-user-plus"></i>';
+  //       icons+= '</div>';
+
+  //       icons+= '<div class="flexInit twoCenter">';
+  //         icons+= '<i class="modalVarious fas fa-cloud-upload-alt"></i>';
+  //       icons+= '</div>';
+  //     }
+  //     else if(where=="destinations"){
+  //       icons+= '<div class="flexInit twoCenter">';
+  //         icons+= '<i class="modalVarious fas fa-images"></i>';
+  //       icons+= '</div>';
+  //     }
+  //   }
+
+  //   if(state=="true"){
+  //     tdLast+= '<div class="flexInit">';
+  //       tdLast+= icons;
+
+  //       tdLast+= '<div class="flexInit twoCenter">';
+  //   }
+  //         tdLast+= '<a style="display: flex" href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="'+(data.id.value)+'" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>';
+  //   if(state=="true"){
+  //       tdLast+= '</div>';
+  //     tdLast+= '</div>';
+  //   }
+
+  //   return tdLast;
+  // }
+
   function dataTableEdit(){
-    $('.dataTable').Tabledit({
-      url: '<?=$dir_?>editQuery.php',
-      method: 'three',
-      rowIdentifier: 'id',
-      editButton: false,
-      deleteButton: false,
-      hideIdentifier: false,
-      autoFocus: false,
-      columns: {
-          identifier: [0, 'id'],
-          editable: $('.dataTable').data('fieldsEditable')
-      },
-      onSuccess: function(data){
-        let id = data.id;
 
-        delete data.id;
+    if($('.dataTable').is('table')){
+      $('.dataTable').Tabledit({
+        url: '<?=$dir_?>editQuery.php',
+        method: 'three',
+        rowIdentifier: 'id',
+        editButton: false,
+        deleteButton: false,
+        hideIdentifier: false,
+        autoFocus: false,
+        columns: {
+            identifier: [0, 'id'],
+            editable: $('.dataTable').data('fieldsEditable')
+        },
+        onSuccess: function(data){
+          let id = data.id;
 
-        delete data.success;
+          delete data.id;
 
-        data = data.data;
+          delete data.success;
 
-        let dataTable = $('.dataTable').DataTable(), trRow = "#row"+id, dataKeys = Object.keys(data), dataPosition;
+          data = data.data;
 
-        for(var i = 0; i < dataKeys.length; i++){
-          dataPosition = data[dataKeys[i]];
+          let dataTable = $('.dataTable').DataTable(), trRow = "#row"+id, dataKeys = Object.keys(data), dataPosition;
 
-          let options = dataPosition.options == undefined ? '' : dataPosition.options;
+          for(var i = 0; i < dataKeys.length; i++){
+            dataPosition = data[dataKeys[i]];
 
-          // let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options, 'getEtiquette');
-          let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options);
+            let options = dataPosition.options == undefined ? '' : dataPosition.options;
 
-          let tdEdit = $(trRow).children("td[data-field='"+dataKeys[i]+"']");
+            // let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options, 'getEtiquette');
+            let addTD = editTDHTML(dataKeys[i], dataPosition.name, dataPosition.value, dataPosition.type, options);
 
-          dataTable.cell( tdEdit ).data(dataPosition.name);
+            let tdEdit = $(trRow).children("td[data-field='"+dataKeys[i]+"']");
 
-          tdEdit.html(addTD);
+            dataTable.cell( tdEdit ).data(dataPosition.name);
+
+            tdEdit.html(addTD);
+          }
         }
-      }
-    });
+      });
 
-    widthFixed();
+      widthFixed();
+    }
   }
 
   $(document).ready(function(){
@@ -333,129 +373,140 @@
     $('#since, #until').datepicker(optionsDatePicker);
 
     $('#addItem').on('click', function(){
-      let form = $(".formValidate");
 
-      let where = $("#view").val();
+      if($('.dataTable').is('table')){
+        let form = $(".formValidate");
 
-      if(form[0].checkValidity()===false){
-        event.preventDefault();
+        let where = $("#view").val();
 
-        event.stopPropagation();
+        if(form[0].checkValidity()===false){
+          event.preventDefault();
 
-        form.addClass('was-validated');
-      }
-      else{
-        let data_= {}, name_ = $("input[name='name_']").val(), category_ = $("select[name='category_']").val();
+          event.stopPropagation();
 
-        $("#iconLoading").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+          form.addClass('was-validated');
+        }
+        else{
+          let data_= {}, name_ = $("input[name='name_']").val(), category_ = $("select[name='category_']").val();
 
-        $("#iconLoading").attr("style", "display: flex!important;");
+          $("#iconLoading").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
 
-        $.ajax({
-          method: "GET",
-          url: "<?=$dir_?>"+"/addQuery.php?"+$('.formValidate').serialize()+"&view="+$('#view').val(),
-          dataType: "json",
-          // data: data_
-        })
-        .done(function(result){
-          let thsEnables, orderThs;
+          $("#iconLoading").attr("style", "display: flex!important;");
 
-          thsEnables = $('.dataTable').find('thead').find('th').filter('[data-which]');
+          $.ajax({
+            method: "GET",
+            url: "<?=$dir_?>"+"/addQuery.php?"+$('.formValidate').serialize()+"&view="+$('#view').val(),
+            dataType: "json",
+            // data: data_
+          })
+          .done(function(result){
+            let thsEnables, orderThs;
 
-          orderThs = {};
+            thsEnables = $('.dataTable').find('thead').find('th').filter('[data-which]');
 
-          thsEnables.each(function(i){
-            orderThs[$(this).attr('data-which')] = i;
-          });
+            orderThs = {};
 
-          if(result.success == true){
-            let data = result.data, html = '<i class="fa fa-check" aria-hidden="true" style="color: #16a085"></i>', tdLast = "";
-
-            tdLast+= '<div class="nonec" id="i-'+(data.id.value)+'"></div>';
-
-            tdLast+= '<a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="'+(data.id.value)+'" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>';
-
-            $("#iconLoading").html(html);
-
-            let t = $('.dataTable').DataTable(), keys = Object.keys(data), arrayForRow = [], arrayForAttributesRow = [], dataOne;
-
-            for(var i=0;i<keys.length;i++){
-              dataOne = data[keys[i]];
-
-              let options = dataOne.options == undefined ? '' : dataOne.options;
-
-              if(dataOne.type=="input" || dataOne.type=="identifier"){
-                if(orderThs[keys[i]]!=undefined){
-                  let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
-
-                  arrayForRow[orderThs[keys[i]]] = addTD[0];
-
-                  arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
-                }
-              }
-              else if(dataOne.type=="select"){
-                if(orderThs[keys[i]]!=undefined){
-                  let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
-
-                  arrayForRow[orderThs[keys[i]]] = addTD[0];
-
-                  arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
-                }
-              }
-              else if(dataOne.type=="text"){
-                if(orderThs[keys[i]]!=undefined){
-                  arrayForRow[orderThs[keys[i]]] = dataOne.name;
-                }
-              }
-            }
-
-            arrayForRow.push(tdLast);
-
-            t.row.add(arrayForRow).draw( false );
-
-            let TDLastEdit = '#i-'+data.id.value;
-
-            $(TDLastEdit).parent().attr('style', 'text-align: center');
-
-            let TRParent = $(TDLastEdit).parent().parent();
-
-            TRParent.find('td').each(function(i){
-              if(arrayForAttributesRow[i]!=undefined){
-                let keysAttributes = Object.keys(arrayForAttributesRow[i]);
-
-                for (var d = 0; d < keysAttributes.length; d++){
-                  attributeVal = arrayForAttributesRow[i][keysAttributes[d]];
-
-                  $(this).attr(keysAttributes[d], attributeVal);
-                }
-              }
+            thsEnables.each(function(i){
+              orderThs[$(this).attr('data-which')] = i;
             });
 
-            TRParent.attr('id','row'+data.id.value);
+            if(result.success == true){
+              let data = result.data, html = '<i class="fa fa-check" aria-hidden="true" style="color: #16a085"></i>', tdLast = "", icon = "";
 
-            // $("#statusInit").val("true");
-            $('#statusMouseOver').val("true");
+              tdLast+= "<div class='flexInit'>";
 
-            $('.page-item').on('click', function(){
-              $('#statusMouseOver').val("false");
+              if($('.differentIcons')[0]!=undefined){
+                tdLast+= $('.differentIcons')[0].outerHTML;
+              }
+
+              tdLast+= '<div class="flexInit twoCenter">';
+                tdLast+= '<a style="display: flex" href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="'+(data.id.value)+'" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>';
+              tdLast+= '</div>';
+
+              tdLast+= '</div>';
+
+              $("#iconLoading").html(html);
+
+              let t = $('.dataTable').DataTable(), keys = Object.keys(data), arrayForRow = [], arrayForAttributesRow = [], dataOne;
+
+              for(var i=0;i<keys.length;i++){
+                dataOne = data[keys[i]];
+
+                let options = dataOne.options == undefined ? '' : dataOne.options;
+
+                if(dataOne.type=="input" || dataOne.type=="identifier"){
+                  if(orderThs[keys[i]]!=undefined){
+                    let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
+
+                    arrayForRow[orderThs[keys[i]]] = addTD[0];
+
+                    arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
+                  }
+                }
+                else if(dataOne.type=="select"){
+                  if(orderThs[keys[i]]!=undefined){
+                    let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
+
+                    arrayForRow[orderThs[keys[i]]] = addTD[0];
+
+                    arrayForAttributesRow[orderThs[keys[i]]] = addTD[1];
+                  }
+                }
+                else if(dataOne.type=="text"){
+                  if(orderThs[keys[i]]!=undefined){
+                    arrayForRow[orderThs[keys[i]]] = dataOne.name;
+                  }
+                }
+              }
+
+              arrayForRow.push(tdLast);
+
+              t.row.add(arrayForRow).draw( false );
+
+              let TDLastEdit = '#i-'+data.id.value;
+
+              $(TDLastEdit).parent().attr('style', 'text-align: center');
+
+              let TRParent = $(TDLastEdit).parent().parent();
+
+              TRParent.find('td').each(function(i){
+                if(arrayForAttributesRow[i]!=undefined){
+                  let keysAttributes = Object.keys(arrayForAttributesRow[i]);
+
+                  for (var d = 0; d < keysAttributes.length; d++){
+                    attributeVal = arrayForAttributesRow[i][keysAttributes[d]];
+
+                    $(this).attr(keysAttributes[d], attributeVal);
+                  }
+                }
+              });
+
+              TRParent.attr('id','row'+data.id.value);
+
+              // $("#statusInit").val("true");
+              $('#statusMouseOver').val("true");
+
+              $('.page-item').on('click', function(){
+                $('#statusMouseOver').val("false");
+
+                popoverConfirmation();
+              });
 
               popoverConfirmation();
-            });
+            }
+            else if (result.success == false){
+              let html = '<i class="fa fa-times" aria-hidden="true" style="color: #ff5d5d;"></i>';
 
-            popoverConfirmation();
-          }
-          else if (result.success == false){
-            let html = '<i class="fa fa-times" aria-hidden="true" style="color: #ff5d5d;"></i>';
-
-            $("#iconLoading").html(html);
-          }
-        })
-        .fail(function(){
-          console.log("error");
-        })
-        .always(function(){
-          console.log("complete");
-        });
+              $("#iconLoading").html(html);
+            }
+          })
+          .fail(function(){
+            console.log("error");
+          })
+          .always(function(){
+            console.log("complete");
+          });
+        }
       }
     });
 

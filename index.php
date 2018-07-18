@@ -24,5 +24,5 @@ include("{$dir}modelPage/firstPart.php");
       </div>
     </div>
 <?
-  include("{$dir}modelPage/secondPart.php");
+  include("{$dir}modelPage/parts/footer.php"); include("{$dir}modelPage/secondPart.php");
 ?>

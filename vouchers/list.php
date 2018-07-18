@@ -35,7 +35,7 @@ include("{$dir}modelPage/firstPart.php");
                     <thead>
                       <tr>
                         <th scope="col" data-which="id" data-state="off">ID</th>
-                        <th scope="col" data-which="userId" data-where="users">Usuario</th>
+                        <!-- <th scope="col" data-which="userId" data-where="users">Usuario</th> -->
                         <th scope="col" data-which="name">Nombre</th>
                         <th scope="col" data-which="description">Descripcion</th>
                         <th scope="col" data-which="stateId" data-where="states">Estado</th>
@@ -46,7 +46,7 @@ include("{$dir}modelPage/firstPart.php");
                     <tfoot>
                       <tr>
                         <th>ID</th>
-                        <th>Usuario</th>
+                        <!-- <th>Usuario</th> -->
                         <th>Nombre</th>
                         <th>Descripcion</th>
                         <th>Estado</th>
@@ -56,7 +56,7 @@ include("{$dir}modelPage/firstPart.php");
                     </tfoot>
                     <tbody>
                       <?
-                        db_query(0,'select vouchers.*, states.name as stateName, users.id as userId, users.name as userName, users.lastName as userLastName from vouchers left join users on vouchers.userId = users.id left join states on vouchers.stateId = states.id');
+                        db_query(0,'select vouchers.*, states.name as stateName from vouchers left join states on vouchers.stateId = states.id');
                         $i=0;
                         while($i<$tot){
                           $nres = $res->data_seek($i);
@@ -65,19 +65,26 @@ include("{$dir}modelPage/firstPart.php");
                       ?>
                       <tr data-id="row<?=$row['id']?>" id="row<?=$row['id']?>">
                         <td data-field="id" ><?=$row['id']?></td>
-                        <td data-field="userId" ><?=$row['userId'] == null ? 'Todos' : ($row['userName']." ".$row['userLastName'])?></td>
+                        <!-- <td data-field="userId" ><?=$row['userId'] == null ? 'Todos' : ($row['userName']." ".$row['userLastName'])?></td> -->
                         <td data-field="name" ><?=$row['name']?></td>
                         <td data-field="description" ><?=$row['description']?></td>
                         <td data-field="stateId" ><?=$row['stateName']?></td>
                         <td data-field="dateCreated" ><?=$row['dateCreated']?></td>
                         <td style="text-align: center;">
                           <div class="flexInit">
-                            <div class="flexInit twoCenter">
-                              <i class="modalUpload fas fa-cloud-upload-alt"></i>
+
+                            <div class="differentIcons">
+                              <div class="flexInit twoCenter">
+                                <i class="modalUser modalVarious fas fa-user-plus"></i>
+                              </div>
+
+                              <div class="flexInit twoCenter">
+                                <i class="modalUpload modalVarious fas fa-cloud-upload-alt"></i>
+                              </div>
                             </div>
 
                             <div class="flexInit twoCenter">
-                              <a style="display: flex" href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['id']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                              <a style="display: flex" href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
                             </div>
                           </div>
                         </td>
@@ -90,29 +97,6 @@ include("{$dir}modelPage/firstPart.php");
                   </table>
                 </div>
               </div>
-
-              <style>
-                #iconLoading{
-                  display: none;
-                  align-self: center;
-                  margin-left: 8px;
-                  color: #16a085;
-                }
-
-                .borderStyle2{
-                  border-width: 2px 1px 2px 1px;
-                  border-style: solid;
-                }
-
-                .borderStyle{
-                  border-width: 0px 1px 0px 1px;
-                  border-style: solid;
-                }
-
-                .borderColor{
-                  border-color: #dee2e6;
-                }
-              </style>
 
               <div class="col-lg-4">
                 <div style="height: 39px">
@@ -138,28 +122,27 @@ include("{$dir}modelPage/firstPart.php");
 
                 <div class="col-12 borderStyle2 borderColor" style="border-top: 0px;">
                   <form class="formValidate needs-validation" novalidate>
-                    <div class="row styleRow">
+<!--                     <div class="row styleRow">
                       <label for="userId">Usuario</label>
 
                       <select class="custom-select" name="userId" id="userId">
-                        <option value="all">Todos</option>
+                        <option value="all">Todos</option> -->
                       <?
-                        db_query(0, "select * from users");
+                        // db_query(0, "select * from users");
 
-                        for($i=0;$i<$tot;$i++){
-                          $nres = $res->data_seek($i);
+                        // for($i=0;$i<$tot;$i++){
+                        //   $nres = $res->data_seek($i);
       
-                          $row = $res->fetch_assoc(); 
-                        
+                        //   $row = $res->fetch_assoc(); 
                       ?>
-                          <option value="<?=$row['id']?>"><?=!isset($row['lastName']) ? $row['name'] : $row['name']." ".$row['lastName']?></option>
+                          <!-- <option value="<?=$row['id']?>"><?=!isset($row['lastName']) ? $row['name'] : $row['name']." ".$row['lastName']?></option> -->
                       <?
-                        }
+                        // }
                       ?>
-                      </select>
+                      <!-- </select> -->
 
                       <!-- <small id="nameHelp" class="form-text text-muted">Escribe el nombre de la categoría</small> -->
-                    </div>
+                    <!-- </div> -->
 
                     <div class="row styleRow">
                       <label for="name">Nombre</label>
@@ -219,7 +202,7 @@ include("{$dir}modelPage/firstPart.php");
       </div>
     </div>
 <?
-  include("{$dir}modelPage/secondPart.php");
+  include("{$dir}modelPage/parts/footer.php"); include("{$dir}modelPage/secondPart.php");
 ?>
 </body>
 

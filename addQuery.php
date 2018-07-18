@@ -13,6 +13,10 @@ $_POST = $_GET;
 
 $_POST['stateId'] = isset($_POST['stateId']) ? $_POST['stateId'] : 1;
 
+if($_POST['view']=="voucherUsers"){
+  unset($_POST['stateId']);
+}
+
 $view = $_POST['view'];
 
 db_query(0,"select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '".$view."';");
@@ -114,7 +118,7 @@ if($tot>0){
           "value" => $row2['id']
         ));
 
-        if($_POST[$keysPOST[$i]]=="all"){
+        if($keysPOST[$i]=="user" && $_POST[$keysPOST[$i]]=="all"){
           array_push($options, array(
             "name" => 'Todos',
             "value" => 'all'
@@ -135,12 +139,14 @@ if($tot>0){
   }
 
   /////////////
-  for($g=0;$g<count($missingColumns);$g++){
-    $jsondata["data"][$missingColumns[$g]] = array(
-      "name" => $row[$missingColumns[$g]],
-      "value" => $lastID,
-      "type" => 'text'
-    );
+  if(isset($missingColumns)){
+    for($g=0;$g<count($missingColumns);$g++){
+      $jsondata["data"][$missingColumns[$g]] = array(
+        "name" => $row[$missingColumns[$g]],
+        "value" => $lastID,
+        "type" => 'text'
+      );
+    }
   }
 }
 else{

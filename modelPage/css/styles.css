@@ -59,13 +59,43 @@ tr > td:last-child{
   justify-content: center;
   align-items: center;
   padding: 0px 15px 0px 15px;
+  height: 24px;
 }
 
-.modalUpload{
+.modalVarious{
   cursor: pointer;
   color: #007bff;
 }
 
-.modalUpload:hover{
+.modalVarious:hover{
   color: #0056b3;
+}
+
+td{
+  white-space: pre;
+}
+
+td:last-child{
+  white-space: unset!important;
+}
+
+#iconLoading{
+  display: none;
+  align-self: center;
+  margin-left: 8px;
+  color: #16a085;
+}
+
+.borderStyle2{
+  border-width: 2px 1px 2px 1px;
+  border-style: solid;
+}
+
+.borderStyle{
+  border-width: 0px 1px 0px 1px;
+  border-style: solid;
+}
+
+.borderColor{
+  border-color: #dee2e6;
 }

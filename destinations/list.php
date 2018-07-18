@@ -71,8 +71,10 @@ include("{$dir}modelPage/firstPart.php");
                       <td style="text-align: center;">
                         <!-- <a style="padding-right: 15px;" href="<?=$dir_?>categories/add.php?id=<?=$row['idCat']?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
                         <div class="flexInit">
-                          <div class="flexInit twoCenter">
-                            <i class="modalUpload far fa-images"></i>
+                          <div class="differentIcons">
+                            <div class="flexInit twoCenter">
+                              <i class="modalImage modalVarious far fa-images"></i>
+                            </div>
                           </div>
 
                           <div class="flexInit twoCenter">
@@ -89,29 +91,6 @@ include("{$dir}modelPage/firstPart.php");
                 </table>
               </div>
               </div>
-
-              <style>
-                #iconLoading{
-                  display: none;
-                  align-self: center;
-                  margin-left: 8px;
-                  color: #16a085;
-                }
-
-                .borderStyle2{
-                  border-width: 2px 1px 2px 1px;
-                  border-style: solid;
-                }
-
-                .borderStyle{
-                  border-width: 0px 1px 0px 1px;
-                  border-style: solid;
-                }
-
-                .borderColor{
-                  border-color: #dee2e6;
-                }
-              </style>
 
               <div class="col-lg-4">
                 <div style="height: 39px">
@@ -202,7 +181,7 @@ include("{$dir}modelPage/firstPart.php");
       </div>
     </div>
   <?
-    include("{$dir}modelPage/secondPart.php");
+    include("{$dir}modelPage/parts/footer.php"); include("{$dir}modelPage/secondPart.php");
   ?>
 </body>
 
