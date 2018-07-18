@@ -19,17 +19,37 @@ if($_POST['view']=="voucherUsers"){
 
 $view = $_POST['view'];
 
-db_query(0,"select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '".$view."';");
+// if($view=="voucherUsers"){
+//   $view = "users";
 
-$columnsOfTable = array();
+//   db_query(0, "select * from ".$view." where id=".$_GET['userId']." limit 1");
 
-for($r=0;$r<$tot;$r++){
-  $nres = $res->data_seek($r);
-        
-  $row = $res->fetch_assoc();
+//   $_POST = $row;
+// }
 
-  $columnsOfTable[$r] = $row['COLUMN_NAME'];
+function getColumnsTable($view){
+  global $res;
+
+  global $row;
+
+  global $tot;
+
+  db_query(0,"select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '".$view."';");
+
+  $columnsOfTable = array();
+
+  for($r=0;$r<$tot;$r++){
+    $nres = $res->data_seek($r);
+          
+    $row = $res->fetch_assoc();
+
+    $columnsOfTable[$r] = $row['COLUMN_NAME'];
+  }
+
+  return $columnsOfTable;
 }
+
+$columnsOfTable = getColumnsTable($view);
 
 unset($_POST['view']);
 
@@ -48,9 +68,9 @@ if($ultimaLetra==","){
   $columns = substr ($columns, 0, -1);
 }
 
+/////////////
 $values = "";
 
-/////////////
 for($d=0;$d<count($_POST);$d++){
   if($_POST[$keysPOST[$d]]!="all"){
     $values.="'".$_POST[$keysPOST[$d]]."'".",";
