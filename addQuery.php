@@ -54,43 +54,86 @@ $columnsOfTable = getColumnsTable($view);
 unset($_POST['view']);
 
 /////////////
-$keysPOST = array_keys($_POST);
 
-$columns = "";
+function getColumnsForPost($posts){
+  $keysPOST = array_keys($posts);
 
-for($i=0;$i<count($keysPOST);$i++){ 
-  $columns.=$keysPOST[$i].",";
+  $columns = "";
+
+  for($i=0;$i<count($keysPOST);$i++){ 
+    $columns.=$keysPOST[$i].",";
+  }
+
+  $ultimaLetra = substr($columns, -1);
+
+  if($ultimaLetra==","){
+    $columns = substr ($columns, 0, -1);
+  }
+
+  $return = array($columns, $keysPOST);
+
+  return $return;
 }
 
-$ultimaLetra = substr($columns, -1);
+$columns = getColumnsForPost($_POST);
 
-if($ultimaLetra==","){
-  $columns = substr ($columns, 0, -1);
-}
+$keysPOST = $columns[1];
+
+$columns = $columns[0];
 
 /////////////
-$values = "";
 
-for($d=0;$d<count($_POST);$d++){
-  if($_POST[$keysPOST[$d]]!="all"){
-    $values.="'".$_POST[$keysPOST[$d]]."'".",";
+function getValuesOfColumns($columns_){
+  global $_POST;
+
+  $values = "";
+
+  for($d=0;$d<count($_POST);$d++){
+    if($_POST[$columns_[$d]]!="all"){
+      $values.="'".$_POST[$columns_[$d]]."'".",";
+    }
+    else{
+      $values.="null,";
+    }
+  }
+
+  $ultimaLetra = substr($values, -1);
+
+  if($ultimaLetra==","){
+    $values = substr ($values, 0, -1);
+  }
+
+  return $values;
+}
+
+$values = getValuesOfColumns($keysPOST);
+
+function getMissingColumns($columnsOfTable_){
+  global $_POST;
+
+  $missingColumns = "";
+  
+  for($c=0;$c<count($columnsOfTable_);$c++){
+    if(!array_key_exists($columnsOfTable_[$c], $_POST) && $columnsOfTable_[$c]!="id"){
+      $missingColumns[] = $columnsOfTable_[$c];
+    }
+  }
+
+  if($missingColumns==""){
+    return null;
   }
   else{
-    $values.="null,";
+    return $missingColumns;
   }
 }
 
-$ultimaLetra = substr($values, -1);
+$missingColumns = getMissingColumns($columnsOfTable);
 
-if($ultimaLetra==","){
-  $values = substr ($values, 0, -1);
-}
-
-for($c=0;$c<count($columnsOfTable);$c++){
-  if(!array_key_exists($columnsOfTable[$c], $_POST) && $columnsOfTable[$c]!="id"){
-    $missingColumns[] = $columnsOfTable[$c];
-  }
-}
+// for($c=0;$c<count($columnsOfTable);$c++){
+//   if(!array_key_exists($columnsOfTable[$c], $_POST) && $columnsOfTable[$c]!="id"){
+//     $missingColumns[] = $columnsOfTable[$c];
+//   }
+// }
 
 $query = "INSERT INTO ".$view." (".$columns.") VALUES (".$values.")";
 
@@ -100,7 +143,18 @@ db_query(0, "SELECT LAST_INSERT_ID()");
 
 $lastID = $row['LAST_INSERT_ID()'];
 
-db_query(0, "select * from ".$view." where id='".$lastID."'");
+if($view=="voucherUsers"){
+  db_query(0, "select * from users where id='".$_POST['userId']."'");
+
+  $_POST = $row;
+
+  $columns = getColumnsForPost($_POST);
+
+  $keysPOST = $columns[1];
+}
+else{
+  db_query(0, "select * from ".$view." where id='".$lastID."'");
+}
 
 $jsondata["data"]["id"] = array(
   "name" => $lastID,
