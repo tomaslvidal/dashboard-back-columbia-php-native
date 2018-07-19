@@ -19,14 +19,6 @@ if($_POST['view']=="voucherUsers"){
 
 $view = $_POST['view'];
 
-// if($view=="voucherUsers"){
-//   $view = "users";
-
-//   db_query(0, "select * from ".$view." where id=".$_GET['userId']." limit 1");
-
-//   $_POST = $row;
-// }
-
 function getColumnsTable($view){
   global $res;
 
@@ -53,8 +45,6 @@ $columnsOfTable = getColumnsTable($view);
 
 unset($_POST['view']);
 
-/////////////
-
 function getColumnsForPost($posts){
   $keysPOST = array_keys($posts);
 
@@ -80,8 +70,6 @@ $columns = getColumnsForPost($_POST);
 $keysPOST = $columns[1];
 
 $columns = $columns[0];
-
-/////////////
 
 function getValuesOfColumns($columns_){
   global $_POST;
@@ -129,12 +117,6 @@ function getMissingColumns($columnsOfTable_){
 
 $missingColumns = getMissingColumns($columnsOfTable);
 
-// for($c=0;$c<count($columnsOfTable);$c++){
-//   if(!array_key_exists($columnsOfTable[$c], $_POST) && $columnsOfTable[$c]!="id"){
-//     $missingColumns[] = $columnsOfTable[$c];
-//   }
-// }
-
 $query = "INSERT INTO ".$view." (".$columns.") VALUES (".$values.")";
 
 db_insert($query);
@@ -155,12 +137,6 @@ if($view=="voucherUsers"){
 else{
   db_query(0, "select * from ".$view." where id='".$lastID."'");
 }
-
-$jsondata["data"]["id"] = array(
-  "name" => $lastID,
-  "value" => $lastID,
-  "type" => "identifier"
-);
 
 if($tot>0){
 	$jsondata["success"] = true;
@@ -222,6 +198,12 @@ if($tot>0){
       );
     }
   }
+
+  $jsondata["data"]["id"] = array(
+    "name" => $lastID,
+    "value" => $lastID,
+    "type" => "identifier"
+  );
 }
 else{
 	$jsondata["success"] = false;

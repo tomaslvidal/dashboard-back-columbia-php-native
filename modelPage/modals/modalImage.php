@@ -35,18 +35,24 @@ $_GET['id'] = 154;
                 <form class="formValidate needs-validation" novalidate>
                   <input type="hidden" id="voucherId" name="voucherId" value="<?=$_GET['id']?>"/>
 
-                  <div class="flexInit" style="flex-basis: 100%; padding-top: 15px; padding-bottom: 10px">
+                  <div class="flexInit divSelect" style="flex-basis: 100%; padding-top: 15px; padding-bottom: 10px">
                     <div class="form-group" style="padding-left: 15px; padding-right: 15px">
                         <label for="userId">Usuario</label>
 
                         <select class="custom-select" name="userId" id="userId">
                         <?
-                        db_query(0, "select users.id, users.name, users.lastName from users left join voucherUsers on users.id = voucherUsers.userId where voucherUsers.voucherId IS NULL or voucherUsers.voucherId!=".$_GET['id']);
+                        db_query(0, "select voucherUsers.voucherId, users.id, users.name, users.lastName from users left join voucherUsers on users.id = voucherUsers.userId where voucherUsers.voucherId IS NULL or voucherUsers.voucherId!=".$_GET['id']);
 
                         for($i=0;$i<$tot;$i++){
                           $nres = $res->data_seek($i);
       
-                          $row = $res->fetch_assoc(); 
+                          $row = $res->fetch_assoc();
+
+                          db_query(1, "select * from voucherUsers where voucherId=".$_GET['id']." and userId=".$row['id']." limit 1");
+
+                          if($tot1>=1){
+                            break;
+                          }
                         ?>
                           <option value="<?=$row['id']?>"><?=!isset($row['lastName']) ? $row['name'] : $row['name']." ".$row['lastName']?></option>
                         <?
@@ -55,11 +61,15 @@ $_GET['id'] = 154;
                         </select>
                     </div>
 
-                    <div class="form-group" id="addItem" style="padding-bottom: 7px; display: flex; align-items: flex-end; cursor: pointer;">
+                    <div class="form-group" id="addItem" data-remove="true" style="padding-bottom: 7px; display: flex; align-items: flex-end; cursor: pointer;">
                       <div style="display: flex;align-items: center;">
                         <i class="fa fa-plus-circle" aria-hidden="true" style="font-size: 20px; color: #16a085; margin-right: 4px;"></i>
+                        
                         <span>Agregar</span>
-                        <i id="iconLoading" class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+
+                        <div id="iconLoading">
+                          <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -70,12 +80,12 @@ $_GET['id'] = 154;
                     <table class="table table-bordered" data-view="users" id="dataTable" width="100%" cellspacing="0">
                       <thead>
                         <tr>
-                          <th scope="col">ID</th>
-                          <th scope="col">Usuario</th>
-                          <th scope="col">Nombre</th>
-                          <th scope="col">Apellido</th>
-                          <th scope="col">Email</th>
-                          <th scope="col">Teléfono</th>
+                          <th data-which="id" data-state="off" scope="col">ID</th>
+                          <th data-which="user" data-state="off" scope="col">Usuario</th>
+                          <th data-which="name" data-state="off" scope="col">Nombre</th>
+                          <th data-which="lastName" data-state="off" scope="col">Apellido</th>
+                          <th data-which="email" data-state="off" scope="col">Email</th>
+                          <th data-which="telephone" data-state="off" scope="col">Teléfono</th>
                           <th scope="col"><div style="display: block; width: 60px; height: 2px"></div></th>
                         </tr>
                       </thead>
@@ -101,7 +111,7 @@ $_GET['id'] = 154;
 
                             $row = $res->fetch_assoc();
                         ?>
-                        <tr data-id="row<?=$row['voucherId']?>" id="row<?=$row['voucherId']?>">
+                        <tr data-id="row<?=$row['voucherId']?>" data-second-id="<?=$row['id']?>" id="row<?=$row['voucherId']?>">
                           <td data-field="id"><?=$row['voucherId']?></td>
                           <td data-field="user" ><?=$row['user']?></td>
                           <td data-field="name" ><?=$row['name']?></td>
@@ -109,7 +119,7 @@ $_GET['id'] = 154;
                           <td data-field="email" ><?=$row['email']?></td>
                           <td data-field="telephone" ><?=$row['telephone']?></td>
                           <td style="text-align: center;">
-                            <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['id']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
                           </td>
                         </tr>
                         <?

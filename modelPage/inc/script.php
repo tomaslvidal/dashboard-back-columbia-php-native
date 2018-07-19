@@ -131,7 +131,7 @@
   }
 
   function deleteQuick(id=""){
-    let view = $('#view').val();
+    let view = $('#view').val(), tr = $('tr[data-id='+id+']');
 
     let url = '<?=$dir_?>deleteQuery.php';
 
@@ -149,10 +149,6 @@
 
         let trRow = "#row"+id, row = dataTable.row($(trRow));
 
-        row.remove();
-
-        $(trRow).remove();
-
         if(view=="users"){
           text = "El usuario fue eliminado con éxito.";
         }
@@ -162,6 +158,23 @@
         else if(view=="destinations"){
           text = "Destino eliminado con éxito.";
         }
+        else{
+          text = "Registro eliminado con éxito.";
+        }
+
+        if(tr.attr('data-second-id')!=undefined){
+          let user = tr.find('td[data-field=name]').text();
+
+          let lastName = tr.find('td[data-field=lastName]').text();
+
+          let option = "<option value='"+tr.attr('data-second-id')+"'>"+user+" "+lastName+"</option>";
+
+          $('.divSelect').find('select').append(option);
+        }
+
+        row.remove();
+
+        $(trRow).remove();
 
         text!="" ? generateAlert("success", text) : null;
       }
@@ -180,6 +193,9 @@
         }
         else if(view=="destinations"){
           text = "El destino está siendo utilizado, no es posible eliminarlo.";
+        }
+        else{
+          text = "El registro está siendo utilizado, no es posible eliminarlo.";
         }
 
         text!="" ? generateAlert("danger", text) : null;
@@ -211,6 +227,31 @@
 
         if(getEtiquette.length==0){
           attributesTD = type=="input" ? {"data-field":field, "class":"tabledit-view-mode", "style":"cursor: pointer"} : {"data-field":field,"class":"sorting_1"};
+        }
+        else{
+          html +='<td data-field="'+field+'" class="'+TDClass+'" style="'+TDStyle+'">';
+        }
+            html +='<span class="'+classSpan+'">'+name+'</span>';
+            html +='<input class="'+classInput+'" type="'+typeInput+'" name="'+field+'" value="'+name+'" style="'+styleInput+'" disabled="">';
+        if(getEtiquette.length>0){
+          html +='</td>';
+        }
+    }
+    else if(type=="disabled"){
+      let TDClass = 'sorting_1';
+
+      let TDStyle = '';
+
+      let classSpan = 'tabledit-span tabledit-text';
+
+      let classInput = 'tabledit-input tabledit-text';
+
+      let typeInput = 'hidden';
+
+      let styleInput = '';
+
+        if(getEtiquette.length==0){
+          attributesTD = {"data-field":field,"class":"sorting_1"};
         }
         else{
           html +='<td data-field="'+field+'" class="'+TDClass+'" style="'+TDStyle+'">';
@@ -314,7 +355,6 @@
   // }
 
   function dataTableEdit(){
-
     if($('.dataTable').is('table')){
       $('.dataTable').Tabledit({
         url: '<?=$dir_?>editQuery.php',
@@ -373,6 +413,7 @@
     $('#since, #until').datepicker(optionsDatePicker);
 
     $('#addItem').on('click', function(){
+      let _this = $(this);
 
       if($('.dataTable').is('table')){
         let form = $(".formValidate");
@@ -387,7 +428,7 @@
           form.addClass('was-validated');
         }
         else{
-          let data_= {}, name_ = $("input[name='name_']").val(), category_ = $("select[name='category_']").val();
+          let data_= {}, name_ = $("input[name='name_']").val(), category_ = $("select[name='category_']").val(), type_;
 
           $("#iconLoading").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
 
@@ -395,7 +436,7 @@
 
           $.ajax({
             method: "GET",
-            url: "<?=$dir_?>"+"/addQuery.php?"+$('.formValidate').serialize()+"&view="+$('#view').val(),
+            url: "<?=$dir_?>"+"/addQuery.php?"+$('.formValidate').serialize()+"&view="+where,
             dataType: "json",
             // data: data_
           })
@@ -434,9 +475,16 @@
 
                 let options = dataOne.options == undefined ? '' : dataOne.options;
 
+                if(where=="voucherUsers"){
+                  type_ = "disabled";
+                }
+                else{
+                  type_ = dataOne.type;
+                }
+
                 if(dataOne.type=="input" || dataOne.type=="identifier"){
                   if(orderThs[keys[i]]!=undefined){
-                    let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
+                    let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, type_, options);
 
                     arrayForRow[orderThs[keys[i]]] = addTD[0];
 
@@ -445,7 +493,7 @@
                 }
                 else if(dataOne.type=="select"){
                   if(orderThs[keys[i]]!=undefined){
-                    let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, dataOne.type, options);
+                    let addTD = editTDHTML(keys[i], dataOne.name, dataOne.value, type_, options);
 
                     arrayForRow[orderThs[keys[i]]] = addTD[0];
 
@@ -457,17 +505,20 @@
                     arrayForRow[orderThs[keys[i]]] = dataOne.name;
                   }
                 }
+
               }
 
               arrayForRow.push(tdLast);
 
               t.row.add(arrayForRow).draw( false );
 
-              let TDLastEdit = '#i-'+data.id.value;
+              let etiquetteA = $('a[data-id='+(data.id.value)+']');
+
+              let TDLastEdit = etiquetteA.parent();
 
               $(TDLastEdit).parent().attr('style', 'text-align: center');
 
-              let TRParent = $(TDLastEdit).parent().parent();
+              let TRParent = $(TDLastEdit).closest('tr');
 
               TRParent.find('td').each(function(i){
                 if(arrayForAttributesRow[i]!=undefined){
@@ -493,6 +544,14 @@
               });
 
               popoverConfirmation();
+
+              optionSelect = $('.divSelect').find('select').find('option:selected');
+
+              if(_this.attr('data-remove')=="true"){
+                TRParent.attr('data-second-id', optionSelect.val());
+
+                optionSelect.remove();
+              }
             }
             else if (result.success == false){
               let html = '<i class="fa fa-times" aria-hidden="true" style="color: #ff5d5d;"></i>';
