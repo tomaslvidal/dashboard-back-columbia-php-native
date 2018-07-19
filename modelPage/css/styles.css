@@ -99,3 +99,16 @@ td:last-child{
 .borderColor{
   border-color: #dee2e6;
 }
+
+.divSelect{
+  display: none;
+  width: 100%;
+}
+
+.emptyUser{
+  display: none;
+}
+
+.modal-dialog{
+  max-width: 1500px;
+}

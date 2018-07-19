@@ -130,6 +130,21 @@
     }, 4000);
   }
 
+  function stateSelect(){
+    if($('#userId').children().length==0){
+      $('#userId').closest('.divSelect').css('display', 'none');
+
+      $('.emptyUser').css('display', 'inline-flex');
+
+      $('#iconLoading').removeAttr('style');
+    }
+    else{
+      $('.emptyUser').css('display', 'none');
+
+      $('#userId').closest('.divSelect').css('display', 'inline-flex');
+    }
+  }
+
   function deleteQuick(id=""){
     let view = $('#view').val(), tr = $('tr[data-id='+id+']');
 
@@ -170,6 +185,8 @@
           let option = "<option value='"+tr.attr('data-second-id')+"'>"+user+" "+lastName+"</option>";
 
           $('.divSelect').find('select').append(option);
+
+          stateSelect();
         }
 
         row.remove();
@@ -316,7 +333,6 @@
         document.getElementById("logoImage").src = oFREvent.target.result;
     };
   }
-
   // function lastTD(where, data){
   //   let icons = "", state = "", tdLast = "";
 
@@ -405,10 +421,22 @@
 
     popoverConfirmation();
 
+    stateSelect();
+
     let optionsDatePicker = {
       dateFormat: 'dd/mm/yy',
     	autoHide : 'true',
       };
+
+    $('.modalUser').on('click', function(){
+      let id = $(this).closest('tr').attr('data-id');
+
+      $('#myModal .modal-title').text('Usuarios');
+
+      $('#myModal .modal-body').html('<iframe src="<?=$dir_?>modelPage/modals/modalUser.php?id='+id+'" style="width:100%;height:500px" frameborder="0"></iframe>');
+  
+      $('#myModal').modal('show');
+    });
 
     $('#since, #until').datepicker(optionsDatePicker);
 
@@ -551,6 +579,8 @@
                 TRParent.attr('data-second-id', optionSelect.val());
 
                 optionSelect.remove();
+
+                stateSelect();
               }
             }
             else if (result.success == false){
