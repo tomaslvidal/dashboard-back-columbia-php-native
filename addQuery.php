@@ -9,15 +9,76 @@ $jsondata = array();
 
 $jsondata["data"] = array();
 
-$_POST = $_GET;
+if(!isset($_POST['position'])){
+    $_POST = $_GET;
+}
 
 $_POST['stateId'] = isset($_POST['stateId']) ? $_POST['stateId'] : 1;
 
-if($_POST['view']=="voucherUsers"){
-  unset($_POST['stateId']);
+if(isset($_POST['view'])){
+  if($_POST['view']=="voucherUsers"){ //
+    unset($_POST['stateId']);
+  }
+
+  $view = $_POST['view'];
 }
 
-$view = $_POST['view'];
+function uploadFileBase64($position ,$imgForm, $where, $id = ""){
+  global $dir;
+
+  global $row;
+
+  global $tot;
+
+  if(!empty($imgForm)){
+
+    $dirImages = $dir."uploads/images/";
+
+    $img = $imgForm;
+
+    $img = explode(",",$img);
+
+    $data = base64_decode($img[1]);
+
+    $fileName = uniqid()."_".$where[0].'.png';
+
+    $fileMoreRoute = $dirImages . $fileName;
+
+    $fp = fopen($fileMoreRoute, "w");
+
+    fwrite($fp, $data);
+
+    fclose($fp);
+
+    $_POST['image'] = $fileName;
+
+    db_query(0, "select * from destinations where id='{$id}'");
+
+    if($tot>=1){
+
+      $imagenBefore = $row['image'.$position];
+
+      if(!empty($imagenBefore)){
+        if(file_exists($dirImages.$imagenBefore)){
+          unlink($dirImages.$imagenBefore);
+        }
+      }
+    }
+
+    db_update("update destinations set image".$position."='".$fileName."' where id=".$id);
+
+    die();
+  }
+  else{
+    return "";
+  }
+}
+
+if(isset($_POST['position'])){
+  uploadFileBase64($_POST['position'] , $_POST['image'], $_POST['where'], $_POST['id']);
+
+  die();
+}
 
 function getColumnsTable($view){
   global $res;

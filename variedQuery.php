@@ -105,11 +105,9 @@ if(!empty($table))
       //Comprobar si la empresa ya tiene Usuario
       db_query(4,"select * from {$table} where idCompany='{$idCompany}' and panel='{$panel}' and id!='{$id}'");
       //Comprobar si existe usuario
-      if($tot3==0)
-      {
+      if($tot3==0){
         //Comprobar si la empresa ya tiene Usuario
-        if($tot4==0)
-        {
+        if($tot4==0){
           $query = textQuery($columns);
 
           db_update("UPDATE {$table}".$query."where id={$id}");
@@ -121,8 +119,7 @@ if(!empty($table))
 
           header("Location: {$dir_}{$table}/add.php?id={$id}");
         }
-        else
-        {
+        else{
           $_SESSION['alert'] = array(
             'reason' => 'La empresa ya tiene un usuario asociado',
             'type' => 'warning'
@@ -142,8 +139,7 @@ if(!empty($table))
   }
   elseif($table=='companies')
   {
-    if(empty($action))
-    {
+    if(empty($action)){
       $imgForm = verifyPost('image');
 
       uploadFileBase64($imgForm, $table, $id);
@@ -156,8 +152,7 @@ if(!empty($table))
 
       header("Location: {$dir_}{$table}/list.php");
     }
-    else
-    {
+    else{
       $imgForm = verifyPost('image');
 
       uploadFileBase64($imgForm, $table, $id);
@@ -173,8 +168,7 @@ if(!empty($table))
   }
   elseif($table=='packages')
   {
-    if(empty($action))
-    {
+    if(empty($action)){
       $imgForm = verifyPost('image');
 
       uploadFileBase64($imgForm, $table, $id);
@@ -187,8 +181,7 @@ if(!empty($table))
 
       header("Location: {$dir_}{$table}/list.php");
     }
-    else
-    {
+    else{
       $imgForm = verifyPost('image');
 
       uploadFileBase64($imgForm, $table, $id);

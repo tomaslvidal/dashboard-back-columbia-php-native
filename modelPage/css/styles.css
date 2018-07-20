@@ -34,6 +34,7 @@ tr > td:last-child{
   display: flex;
   flex: 1;
   justify-content: center;
+  align-items: center;
 }
 
 #sidenavToggler{

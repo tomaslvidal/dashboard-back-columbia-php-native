@@ -325,13 +325,13 @@
     }
   }
 
-  function PreviewImage(){
+  function PreviewImage($this){
     var oFReader = new FileReader();
 
-    oFReader.readAsDataURL(document.getElementById("logoFile").files[0]);
+    oFReader.readAsDataURL($this[0].files[0]);
 
     oFReader.onload = function(oFREvent){
-        document.getElementById("logoImage").src = oFREvent.target.result;
+      $this.closest('.rowOneFile').siblings('.rowTwoFile').find('#logoImage').attr('src', oFREvent.target.result);
     };
   }
   // function lastTD(where, data){
@@ -631,84 +631,120 @@
       popoverConfirmation();
     });
 
-    $('#logoFile').change(function(){
-      $('#progressImage').text("");
+    $('.logoFile').change(function(){
+      let this_ = $(this);
 
-      $('#progressImage').attr('aria-valuenow', 0);
+      let progressImage = this_.closest('.rowOneFile').siblings('.rowTwoFile').find('#progressImage');
 
-      $('#progressImage').attr('style', 'width: '+"0"+'%');
+      progressImage.text("");
+
+      progressImage.attr('aria-valuenow', "0");
+
+      progressImage.attr('style', 'width: 0%');
 
       setTimeout(function(){
         let form = $('form')[0];
 
         let formData = new FormData(form);
 
-        let url = '<?=$dir_?>uploadFile.php';
+        let url = "<?=$dir_?>getBase64.php";
 
-        let sizeFile = $('input[type=file]')[0].files[0].size;
+        if(this_[0].files[0]!=undefined){
+          let sizeFile = this_[0].files[0].size;
 
-        if(sizeFile<=1700000)
-        {
-          PreviewImage();
+          if(sizeFile <= 1700000){
+            PreviewImage(this_);
 
-          formData.append('id', $('input[name=id]').val());
+            formData.append('id', $('input[name=id]').val() );
 
-          formData.append('where', $('input[name=where]').val());
+            formData.append('where', $('input[name=where]').val() );
 
-          formData.append('image', $('input[type=file]')[0].files[0]);
+            formData.append('image', this_[0].files[0]);
 
-          $.ajax({
-            method: 'POST',
-            url: url,
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(result) {
-              let result_base64 = result;
+            $.ajax({
+              method: 'POST',
+              url: url,
+              data: formData,
+              cache: false,
+              contentType: false,
+              processData: false,
+              success: function(result) {
+                let result_base64 = result;
 
-              let resultCheck = result.indexOf('base64');
+                let resultCheck = result.indexOf('base64');
 
-              if(resultCheck!=-1)
-              {
-                $('.formValidate').append("<input type='hidden' name='image' value='"+result_base64+"' />");
-              }
-            },
-            error: function(result) {
-              console.log("error");
-            },
-            xhr: function(){
-                var xhr = new window.XMLHttpRequest();
+                if(resultCheck!=-1){
+                  $('.formValidate').append("<input type='hidden' name='image' value='"+result_base64+"' />");
 
-                xhr.upload.addEventListener("progress", function(e){
+                  let url = "<?=$dir_?>addQuery.php";
 
-                  if (e.lengthComputable) {
-                    percentComplete = parseInt( (e.loaded / e.total * 100), 10);
+                  let formDate_ = new FormData();
 
-                    $('#progressImage').text(percentComplete+"%");
+                  formDate_.append('id', $('input[name=id]').val() );
 
-                    $('#progressImage').attr('aria-valuenow', percentComplete);
+                  formDate_.append('where', $('input[name=view]').val() );
 
-                    $('#progressImage').attr('style', 'width: '+percentComplete+'%');
-                  }
-                  else{
-                       console.log("Length not computable.");
-                  }
-                }, false);
-                return xhr;
+                  formDate_.append('image', result_base64);
+
+                  formDate_.append('position', this_.attr('position'));
+
+                  $.ajax({
+                    method: 'POST',
+                    url: url,
+                    data: formDate_,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(result){
+                      console.log("Ready");
+                    }
+                  });
+                }
+              },
+              error: function(result) {
+                console.log("error");
+              },
+              xhr: function(){
+                  var xhr = new window.XMLHttpRequest();
+
+                  xhr.upload.addEventListener("progress", function(e){
+
+                    if (e.lengthComputable) {
+                      percentComplete = parseInt( (e.loaded / e.total * 100), 10);
+
+                      progressImage.text(percentComplete+"%");
+
+                      progressImage.attr('aria-valuenow', percentComplete);
+
+                      progressImage.attr('style', 'width: '+percentComplete+'%');
+                    }
+                    else{
+                         console.log("Length not computable.");
+                    }
+                  }, false);
+                  return xhr;
+            }
+            });
           }
-          });
+          else{
+            console.log("Supera el tamaño permitido");
+          }
         }
         else{
-          console.log("Supera el tamaño permitido");
+          progressImage.text("");
+
+          progressImage.attr('aria-valuenow', "0");
+
+          progressImage.attr('style', 'width: 0%');
         }
+        
       },1000);
     });
 
     $("#submitButtom").click(function(event) {
       let form = $(".formValidate");
 
-      if (form[0].checkValidity() === false) {
+      if (form[0].checkValidity() === false){
         event.preventDefault();
 
         event.stopPropagation();
