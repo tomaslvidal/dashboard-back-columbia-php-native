@@ -283,13 +283,14 @@
       options = options;
 
       if(getEtiquette.length==0){
-        attributesTD = {"data-field":field,"class":"tabledit-view-mode","style":"cursor: pointer"};
+        attributesTD = {"data-field":field,"class":"tabledit-view-mode","style":"cursor: pointer; display: flex"};
       }
       else{
-        html +='<td data-field="'+field+'" class="tabledit-view-mode" style="cursor: pointer;">';
+        html +='<td data-field="'+field+'" class="tabledit-view-mode" style="display: flex; cursor: pointer;">';
       }
 
       let optionsHTML = "", optionHTMLFirst = "";
+      // html +='  <span class="tabledit-span">'+name+'</span>';
       html +='  <span class="tabledit-span">'+name+'</span>';
       html +='  <select class="tabledit-input form-control input-sm" name="'+field+'" style="display: none;" disabled="">';
                 for (var i = 0; i < options.length; i++){
@@ -428,12 +429,22 @@
     	autoHide : 'true',
       };
 
-    $('.modalUser').on('click', function(){
+    $('.table-responsive').on('click', '.modalUser', function(){
       let id = $(this).closest('tr').attr('data-id');
 
       $('#myModal .modal-title').text('Usuarios');
 
       $('#myModal .modal-body').html('<iframe src="<?=$dir_?>modelPage/modals/modalUser.php?id='+id+'" style="width:100%;height:500px" frameborder="0"></iframe>');
+  
+      $('#myModal').modal('show');
+    });
+
+    $('.table-responsive').on('click', '.modalImage', function(){
+      let id = $(this).closest('tr').attr('data-id');
+
+      $('#myModal .modal-title').html('Imagenes');
+
+      $('#myModal .modal-body').html('<iframe src="<?=$dir_?>modelPage/modals/modalImage.php?id='+id+'" style="width:100%;height:500px" frameborder="0"></iframe>');
   
       $('#myModal').modal('show');
     });
@@ -456,7 +467,7 @@
           form.addClass('was-validated');
         }
         else{
-          let data_= {}, name_ = $("input[name='name_']").val(), category_ = $("select[name='category_']").val(), type_;
+          let data_ = {}, name_ = $("input[name='name_']").val(), category_ = $("select[name='category_']").val(), type_;
 
           $("#iconLoading").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
 
@@ -562,7 +573,6 @@
 
               TRParent.attr('id','row'+data.id.value);
 
-              // $("#statusInit").val("true");
               $('#statusMouseOver').val("true");
 
               $('.page-item').on('click', function(){

@@ -61,7 +61,7 @@ include("{$dir}modelPage/firstPart.php");
                         </select>
                     </div>
 
-                    <div class="form-group" id="addItem" data-remove="true" style="padding-bottom: 7px; display: flex; align-items: flex-end; cursor: pointer;">
+                    <div class="form-group" id="addItem" data-remove="true" style="padding-bottom: 8px; display: flex; align-items: flex-end; cursor: pointer;">
                       <div style="display: flex;align-items: center;">
                         <i class="fa fa-plus-circle" aria-hidden="true" style="font-size: 20px; color: #16a085; margin-right: 4px;"></i>
                         
