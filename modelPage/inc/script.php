@@ -93,16 +93,8 @@
 
     table.data('fieldsEditable', arrayForTableedit);
   }
-  function popoverConfirmation(){
-    $('[data-toggle=confirmation]').confirmation({
-      rootSelector: '[data-toggle=confirmation]',
-      onConfirm: function(){
-        let id = $(this).closest('tr').attr('data-id');
-        
-        deleteQuick(id);
-      }
-    });
 
+  function initTableEdit(){
     dataTableEdit();
   }
 
@@ -331,7 +323,19 @@
     oFReader.readAsDataURL($this[0].files[0]);
 
     oFReader.onload = function(oFREvent){
-      $this.closest('.rowOneFile').siblings('.rowTwoFile').find('#logoImage').attr('src', oFREvent.target.result);
+      $this.closest('.rowOneFile').siblings('.divGeneralUpload').find('#logoImage').attr('src', oFREvent.target.result);
+
+      let html = "";
+
+      html +='<div class="divClose">';
+      html +='  <i class="iconClose fas fa-window-close"></i>';
+      html +='</div>';
+
+      let divGeneralUpload = $this.closest('.rowOneFile').siblings('.divGeneralUpload');
+
+      if(divGeneralUpload.find('.divClose').length==0){
+        divGeneralUpload.prepend(html);
+      }
     };
   }
   // function lastTD(where, data){
@@ -417,10 +421,43 @@
     }
   }
 
+  function confirmationDownload($this_, off = "on"){
+    $this_.confirmation({
+      rootSelector: $this_,
+      onConfirm: function(){
+        if($this_.attr('data-file')!=undefined){
+          window.location.href = '<?=$dir_?>download.php?f='+$this_.attr('data-file');
+        }
+      },
+      onCancel: function(){
+        let id = $this_.closest('tr').attr('data-id');
+
+        $.ajax({
+          type: 'POST',
+          url: "<?=$dir_?>deleteQuery.php",
+          data: {"view": 'destinationsFile', "id": id},
+          success: function(){
+            $this_.attr('data-clear', 'no');
+
+            $this_.removeAttr('data-file');
+
+            $this_.off('.confirmation');
+          }
+        });
+      }
+    });
+
+    if($this_.data('state')==undefined && off=="on"){
+      $this_.trigger('click');
+
+      $this_.data('state', 'true');
+    }
+  }
+
   $(document).ready(function(){
     ajaxSelect();
 
-    popoverConfirmation();
+    initTableEdit();
 
     stateSelect();
 
@@ -428,6 +465,33 @@
       dateFormat: 'dd/mm/yy',
     	autoHide : 'true',
       };
+
+    $('.dataTable').on('click', '.buttonDelete', function(e){
+      e.preventDefault();
+      
+      $(this).closest('a').confirmation({
+        rootSelector: $(this).closest('a'),
+        onConfirm: function(){
+          let id = $(this).closest('tr').attr('data-id');
+          
+          deleteQuick(id);
+        }
+      });
+
+      if($(this).data('state')==undefined){
+        $(this).trigger('click');
+
+        $(this).data('state', 'true');
+      }
+    });
+
+    $('.dataTable').on('click', '.iconDownload:not([data-clear=no])', function(e){
+      e.preventDefault();
+      
+      let this_ = $(this);
+
+      confirmationDownload(this_);
+    });
 
     $('.table-responsive').on('click', '.modalUser', function(){
       let id = $(this).closest('tr').attr('data-id');
@@ -578,10 +642,10 @@
               $('.page-item').on('click', function(){
                 $('#statusMouseOver').val("false");
 
-                popoverConfirmation();
+                initTableEdit();
               });
 
-              popoverConfirmation();
+              initTableEdit();
 
               optionSelect = $('.divSelect').find('select').find('option:selected');
 
@@ -610,7 +674,7 @@
     });
 
     $("th").on('click', function (){
-      popoverConfirmation();
+      initTableEdit();
     });
 
     $('#dataTable_wrapper > div:nth-child(3) > div.col-sm-12.col-md-7').on('mouseover','#dataTable_paginate > ul',function(e){
@@ -622,19 +686,19 @@
         $('.page-item').on('click', function(){
           $('#statusMouseOver').val("false");
 
-          popoverConfirmation();
+          initTableEdit();
         });
       }
     });
 
     $("select[name='dataTable_length'], input[type='search']").on('change', function(){
-      popoverConfirmation();
+      initTableEdit();
     });
 
     $('.logoFile').change(function(){
       let this_ = $(this);
 
-      let progressImage = this_.closest('.rowOneFile').siblings('.rowTwoFile').find('#progressImage');
+      let progressImage = this_.closest('.rowOneFile').siblings('.divGeneralUpload').find('#progressImage');
 
       progressImage.text("");
 
@@ -696,7 +760,6 @@
                     contentType: false,
                     processData: false,
                     success: function(result){
-                      console.log("Ready");
                     }
                   });
                 }
@@ -765,6 +828,62 @@
         previousElem = this;
 
         $(this).attr('previous', $(this).prop('checked'));
+    });
+
+    $('.dataTable').on('click', '.modalUpload', function(){
+      $(this).siblings('.fileDownload').trigger('click');
+    });
+
+    $('.dataTable').on('change', '.fileDownload', function(){
+      if($(this)[0].files[0]!=undefined){
+        let formDate_ = new FormData();
+
+        formDate_.append('view', $('input[name=view]').val() );
+
+        formDate_.append('id', $(this).closest('tr').attr('data-id') );
+
+        formDate_.append('file', $(this)[0].files[0]);
+
+        let this_ = $(this);
+
+        this_.siblings('.modalUpload').removeClass('fa-cloud-upload-alt');
+
+        this_.siblings('.modalUpload').addClass('fas fa-spinner fa-spin');
+      
+        $.ajax({
+          method: "POST",
+          url: "<?=$dir_?>uploadFile.php",
+          data: formDate_,
+          cache: false,
+          contentType: false,
+          processData: false
+        })
+        .done(function(result){
+          if(result.success.toString() == "true"){
+            this_.siblings('.modalUpload').removeClass('fas fa-spinner fa-spin');
+
+            this_.siblings('.modalUpload').addClass('fa-cloud-upload-alt');
+
+            this_.siblings('.iconDownload').remove();
+
+            let html = '<i data-toggle="confirmation" data-btn-ok-label="Descargar" data-file="'+result.nameFile+'" data-popout="true" data-btn-cancel-label="Borrar archivo" data-btn-cancel-class="btn-danger" data-title="Acciones" data-clear="yes" class="fas fa-cloud-download-alt modalVarious iconDownload"></i>';
+
+            this_.parent().append(html);
+
+            confirmationDownload(this_.parent().find('.iconDownload'), "off");
+          }
+          else if(result.success.toString() == "false"){
+            this_.siblings('.modalUpload').removeClass('fas fa-spinner fa-spin');
+
+            this_.siblings('.modalUpload').addClass('fa-cloud-upload-alt');
+
+            alert(result.reason);
+          }
+        })
+        .fail(function(){
+        });
+      }
+
     });
   });
 

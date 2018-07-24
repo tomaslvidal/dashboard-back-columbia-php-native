@@ -78,7 +78,7 @@ include("{$dir}modelPage/firstPart.php");
                           </div>
 
                           <div class="flexInit twoCenter">
-                            <a style="display: flex" href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="<?=$row['id']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                            <a style="display: flex" href="#" data-toggle="confirmation" data-popout="true" data-btn-ok-label="Si" data-id="<?=$row['id']?>" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
                           </div>
                         </div>
                       </td>

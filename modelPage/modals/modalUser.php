@@ -124,7 +124,7 @@ include("{$dir}modelPage/firstPart.php");
                           <td data-field="email" ><?=$row['email']?></td>
                           <td data-field="telephone" ><?=$row['telephone']?></td>
                           <td style="text-align: center;">
-                            <a href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="confirmation" data-popout="true" data-btn-ok-label="Si" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
                           </td>
                         </tr>
                         <?

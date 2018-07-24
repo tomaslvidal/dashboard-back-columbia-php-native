@@ -79,12 +79,16 @@ include("{$dir}modelPage/firstPart.php");
                               </div>
 
                               <div class="flexInit twoCenter">
-                                <i class="modalUpload modalVarious fas fa-cloud-upload-alt"></i>
+                                <i class="modalUpload modalVarious fas fa-cloud-upload-alt" style="margin-right: 15px"></i>
+
+                                <i data-toggle="confirmation" data-btn-ok-label="Descargar" data-popout="true" data-btn-cancel-label="Borrar archivo" data-btn-cancel-class="btn-danger" data-title="Acciones" data-clear="<?=$row['fileName']!="" ? 'yes' : 'no'?>" <?=$row['fileName'] ? 'data-file="'.$row['fileName'].'"' : ''?>class="fas fa-cloud-download-alt modalVarious iconDownload"></i>
+
+                                <input type="file" class="fileDownload" name="file" style="display: none!important">
                               </div>
                             </div>
 
                             <div class="flexInit twoCenter">
-                              <a style="display: flex" href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
+                              <a style="display: flex" href="#" data-toggle="confirmation" data-popout="true" data-btn-ok-label="Si" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>
                             </div>
                           </div>
                         </td>

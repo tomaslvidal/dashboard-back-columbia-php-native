@@ -59,7 +59,7 @@ tr > td:last-child{
 .twoCenter{
   justify-content: center;
   align-items: center;
-  padding: 0px 15px 0px 15px;
+  padding: 0px 12px 0px 12px;
   height: 24px;
 }
 
@@ -112,4 +112,21 @@ td:last-child{
 
 .modal-dialog{
   max-width: 1500px;
+}
+
+svg[data-clear=no]{
+  color: #94a1ad!important;
+  cursor: not-allowed;
+}
+
+.iconDownload{
+  color: #41484f;
+}
+
+.buttonDelete{
+  cursor: pointer;
+}
+
+.differentIcons{
+  display: flex;
 }
