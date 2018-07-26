@@ -557,15 +557,24 @@
             if(result.success == true){
               let data = result.data, html = '<i class="fa fa-check" aria-hidden="true" style="color: #16a085"></i>', tdLast = "", icon = "";
 
-              tdLast+= "<div class='flexInit'>";
+              tdLast += '<div class="flexInit" style="text-align: center">';
+                tdLast += '<div class="differentIcons">';
+                  tdLast += '<div class="flexInit twoCenter">';
+                    tdLast += '<i class="modalUser modalVarious fas fa-user-plus"></i>';
+                  tdLast += '</div>';
 
-              if($('.differentIcons')[0]!=undefined){
-                tdLast+= $('.differentIcons')[0].outerHTML;
-              }
+                  tdLast += '<div class="flexInit twoCenter">';
+                    tdLast += '<i class="modalUpload modalVarious fas fa-cloud-upload-alt" style="margin-right: 15px"></i>';
 
-              tdLast+= '<div class="flexInit twoCenter">';
-                tdLast+= '<a style="display: flex" href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="'+(data.id.value)+'" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>';
-              tdLast+= '</div>';
+                    tdLast += '<i data-toggle="confirmation" data-btn-ok-label="Descargar" data-popout="true" data-btn-cancel-label="Borrar archivo" data-btn-cancel-class="btn-danger" data-title="Acciones" data-clear="no" class="fas fa-cloud-download-alt modalVarious iconDownload"></i>';
+
+                    tdLast += '<input type="file" class="fileDownload" name="file" style="display: none!important">';
+                  tdLast += '</div>';
+                tdLast += '</div>';
+
+                tdLast+= '<div class="flexInit twoCenter">';
+                  tdLast+= '<a style="display: flex" href="#" data-toggle="confirmation" data-btn-ok-label="Si" data-id="'+(data.id.value)+'" data-btn-cancel-label="No" data-title="¿Está seguro?"><i class="buttonDelete fa fa-trash" aria-hidden="true"></i></a>';
+                tdLast+= '</div>';
 
               tdLast+= '</div>';
 
